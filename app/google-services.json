@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "786678825159",
+    "project_id": "cademeupet-7ca2a"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786678825159:android:41b906e78cc1ecb2",
+        "android_client_info": {
+          "package_name": "com.cademeupet.cademeupet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786678825159-sqksne6c7qihqeulapifeibf8fto57rf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cademeupet.cademeupet",
+            "certificate_hash": "8D8CCEFE7DDC5C34FCBE11DBF43C25E98786A679"
+          }
+        },
+        {
+          "client_id": "786678825159-g2v6gv0g0r3r64i19c7cnujmj9ag717s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOahtGYjrKgAqZn2PRYuHn58swSOaakhs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
