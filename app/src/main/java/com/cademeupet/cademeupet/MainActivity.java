@@ -2,17 +2,60 @@ package com.cademeupet.cademeupet;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.nfc.Tag;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+
+    private static final String TAG = "Main Activity";
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestProfile()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        OptionalPendingResult<GoogleSignInResult> pendingResult =
+                Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (pendingResult.isDone()) {
+            // There's immediate result available.
+            GoogleSignInResult result = pendingResult.get();
+            if(result.isSuccess()) {
+                GoogleSignInAccount acct = result.getSignInAccount();
+                String email = acct.getEmail();
+                String name = acct.getDisplayName();
+                String token = acct.getId();
+                Log.d(TAG, "Login result: " + email + " " + name + " " + token);
+                findViewById(R.id.login_button).setVisibility(View.GONE);
+            }
+        } else {
+            Log.d(TAG, "Failed to auth user with Google!");
+        }
     }
 
     public void readQRCode(View view) {
@@ -55,4 +98,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
+    }
 }

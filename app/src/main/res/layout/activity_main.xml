@@ -20,13 +20,13 @@
         android:onClick="readQRCode"/>
 
     <Button
+        android:id="@+id/login_button"
         android:text="Login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/login"
         android:onClick="login" />
 
 </RelativeLayout>
