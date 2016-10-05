@@ -10,10 +10,20 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.cademeupet.cademeupet.LoginActivity">
 
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/facebook_sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/google_sign_in_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp" />
+
     <com.google.android.gms.common.SignInButton
         android:id="@+id/google_sign_in_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="222dp" />
 </RelativeLayout>
