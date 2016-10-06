@@ -1,14 +1,18 @@
 package com.cademeupet.cademeupet;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -50,19 +54,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (pendingResult.isDone()) {
             // There's immediate result available.
             GoogleSignInResult result = pendingResult.get();
+            Log.d(TAG, "Login result: " + result.isSuccess());
             if(result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
-                String email = acct.getEmail();
-                String name = acct.getDisplayName();
+                //String email = acct.getEmail();
+                //String name = acct.getDisplayName();
                 String token = acct.getId();
-                Log.d(TAG, "Login result: " + email + " " + name + " " + token);
+                Log.d(TAG, "Google token: " + token);
                 findViewById(R.id.login_button).setVisibility(View.GONE);
             }
         } else {
             Log.d(TAG, "Failed to auth user with Google!");
         }
 
-        // Falta fazer a verificação se usuario esta logado com facebook, escondendo o botao de login se estiver
+        // Verificacao se o usuario esta autenticado pelo facebook
+        Log.d(TAG, "Facebook user token: " + Profile.getCurrentProfile().getId());
+        if (Profile.getCurrentProfile().getId() != null) {
+            findViewById(R.id.login_button).setVisibility(View.GONE);
+        }
 
     }
 
@@ -78,6 +87,36 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
+    public void insertCode(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Insira o código");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String m_Text = input.getText().toString();
+                Log.d(TAG, "Inserted Text: " + m_Text);
+                showPetActivity(m_Text);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -85,9 +124,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             if (resultCode == RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
                 //new AlertDialog.Builder(this).setMessage(contents).setTitle("Result").setIcon(android.R.drawable.ic_dialog_alert).show();
-                Intent intent = new Intent(this, PetDataActivity.class);
-                intent.putExtra("PET_DATA", contents);
-                startActivity(intent);
+                showPetActivity(contents);
             }
             /*
             // Evento ação cancelada
@@ -99,6 +136,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
             */
         }
+    }
+
+    public void showPetActivity(String code) {
+        Intent intent = new Intent(this, PetDataActivity.class);
+        intent.putExtra("PET_DATA", code);
+        startActivity(intent);
     }
 
     public void login(View view) {
