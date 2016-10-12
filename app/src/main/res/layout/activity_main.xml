@@ -17,7 +17,7 @@
         android:id="@+id/buttonQRCode"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:onClick="readQRCode"/>
+        android:onClick="readQRCode (MainActivity)"/>
 
     <Button
         android:id="@+id/login_button"
@@ -38,5 +38,12 @@
         android:layout_marginTop="15dp"
         android:id="@+id/buttonInsertCode"
         android:onClick="insertCode" />
+
+    <Button
+        android:text="Test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button2"
+        android:onClick="databaseTest" />
 
 </RelativeLayout>

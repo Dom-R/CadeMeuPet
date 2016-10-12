@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.facebook.AccessToken;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.auth.api.Auth;
@@ -22,16 +23,27 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.facebook.FacebookSdk;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "Main Activity";
+    private static final int LOGIN_RESULT = 3627;
+    private static final int QRCODE_RESULT = 3849;
     private GoogleApiClient mGoogleApiClient;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
@@ -54,23 +66,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (pendingResult.isDone()) {
             // There's immediate result available.
             GoogleSignInResult result = pendingResult.get();
-            Log.d(TAG, "Login result: " + result.isSuccess());
+            Log.d(TAG, "Google Login result: " + result.isSuccess());
             if(result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
                 //String email = acct.getEmail();
                 //String name = acct.getDisplayName();
                 String token = acct.getId();
                 Log.d(TAG, "Google token: " + token);
-                findViewById(R.id.login_button).setVisibility(View.GONE);
+                //findViewById(R.id.login_button).setVisibility(View.GONE);
             }
         } else {
             Log.d(TAG, "Failed to auth user with Google!");
         }
 
         // Verificacao se o usuario esta autenticado pelo facebook
-        Log.d(TAG, "Facebook user token: " + Profile.getCurrentProfile().getId());
-        if (Profile.getCurrentProfile().getId() != null) {
-            findViewById(R.id.login_button).setVisibility(View.GONE);
+        //Log.d(TAG, "Facebook user token: " + Profile.getCurrentProfile().getId());
+        if (isFacebookLoggedIn()) {
+            //findViewById(R.id.login_button).setVisibility(View.GONE);
+        } else {
+            Log.d(TAG, "Not logged in by facebook!");
         }
 
     }
@@ -79,12 +93,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         try {
             Intent intent = new Intent("com.google.zxing.client.android.SCAN");
             intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // "PRODUCT_MODE for bar codes
-            startActivityForResult(intent, 0);
+            startActivityForResult(intent, QRCODE_RESULT);
         } catch (Exception e) {
             Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
             Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
             startActivity(marketIntent);
         }
+    }
+
+    public boolean isFacebookLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 
     public void insertCode(View view) {
@@ -120,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
+        if (requestCode == QRCODE_RESULT) {
             if (resultCode == RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
                 //new AlertDialog.Builder(this).setMessage(contents).setTitle("Result").setIcon(android.R.drawable.ic_dialog_alert).show();
@@ -136,6 +155,56 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
             */
         }
+
+        // Managed to Log in
+        if(requestCode == LOGIN_RESULT) {
+            if (resultCode == RESULT_OK) {
+                //findViewById(R.id.login_button).setVisibility(View.GONE);
+
+                // Create User
+                System.out.println(data.getStringExtra("USER_ID"));
+                createUserIfNotExist(data.getStringExtra("USER_ID"));
+
+            }
+        }
+    }
+
+    public void databaseTest(View view) {
+        createUserIfNotExist("123");
+        //createUserIfNotExist("321");
+        //createUserIfNotExist("432");
+    }
+
+    public void createUserIfNotExist(final String token) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://cademeupet-4379e.firebaseio.com/users/" + token);
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // TODO: handle the case where the data already exists
+                    System.out.println("User Exist in db");
+                }
+                else {
+                    // TODO: handle the case where the data does not yet exist
+                    System.out.println("Does not exist in db");
+
+                    startRegistration(token);
+
+
+                    //UserInfo user = new UserInfo();
+                    //mDatabase.child("users").child(token).setValue("");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
+    public void startRegistration(String token) {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.putExtra("TOKEN", token);
+        startActivity(intent);
     }
 
     public void showPetActivity(String code) {
@@ -146,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void login(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, LOGIN_RESULT);
     }
 
     @Override
