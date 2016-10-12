@@ -1,19 +1,21 @@
 {
   "project_info": {
-    "project_number": "786678825159",
-    "project_id": "cademeupet-7ca2a"
+    "project_number": "919364702214",
+    "firebase_url": "https://cademeupet-4379e.firebaseio.com",
+    "project_id": "cademeupet-4379e",
+    "storage_bucket": "cademeupet-4379e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:786678825159:android:41b906e78cc1ecb2",
+        "mobilesdk_app_id": "1:919364702214:android:41b906e78cc1ecb2",
         "android_client_info": {
           "package_name": "com.cademeupet.cademeupet"
         }
       },
       "oauth_client": [
         {
-          "client_id": "786678825159-sqksne6c7qihqeulapifeibf8fto57rf.apps.googleusercontent.com",
+          "client_id": "919364702214-2bo5oa704fdbtbdkog3n5nehn8uf1a1f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.cademeupet.cademeupet",
@@ -21,13 +23,13 @@
           }
         },
         {
-          "client_id": "786678825159-g2v6gv0g0r3r64i19c7cnujmj9ag717s.apps.googleusercontent.com",
+          "client_id": "919364702214-u4j0de3epk36r0d8d8556o8ht65fgrhf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCOahtGYjrKgAqZn2PRYuHn58swSOaakhs"
+          "current_key": "AIzaSyCLurybDfpzrfhldsXKtOA96NTtVWIIauk"
         }
       ],
       "services": {
@@ -35,11 +37,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "919364702214-u4j0de3epk36r0d8d8556o8ht65fgrhf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
