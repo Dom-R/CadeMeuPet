@@ -71,6 +71,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     };
                     // no need to call startTracking() on mProfileTracker
                     // because it is called by its constructor, internally.
+
+                    Intent data = new Intent();
+                    data.putExtra("USER_ID", Profile.getCurrentProfile().getId());
+
+                    setResult(RESULT_OK, data);
+                    finish();
                 }
                 else {
                     Profile profile = Profile.getCurrentProfile();
@@ -125,7 +131,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             String name = acct.getDisplayName();
             String token = acct.getId();
             Log.d(TAG, "Login result: " + email + " " + name + " " + token);
+
+            Intent data = new Intent();
+            data.putExtra("USER_ID", token);
+            setResult(RESULT_OK, data);
             finish();
+
         }
     }
 
