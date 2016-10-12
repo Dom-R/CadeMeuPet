@@ -53,6 +53,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         LoginButton loginButton = (LoginButton) findViewById(R.id.facebook_sign_in_button);
         loginButton.setReadPermissions("public_profile");
+        loginButton.setReadPermissions("email");
+
         mFacebookCallbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(mFacebookCallbackManager, new FacebookCallback<LoginResult>() {
 
@@ -67,20 +69,34 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             // profile2 is the new profile
                             Log.v("facebook - profile", profile2.getFirstName());
                             mProfileTracker.stopTracking();
+
+                            String fullName = profile2.getName();
+
+                            Intent data = new Intent();
+                            data.putExtra("USER_ID", profile2.getId());
+                            data.putExtra("USER_NAME", fullName);
+                            data.putExtra("USER_EMAIL", ""); // Descobrir como recuperar email do facebook
+
+                            setResult(RESULT_OK, data);
+                            finish();
+
                         }
                     };
                     // no need to call startTracking() on mProfileTracker
                     // because it is called by its constructor, internally.
 
+                } else {
+                    Profile profile = Profile.getCurrentProfile();
+
+                    String fullName = Profile.getCurrentProfile().getName();
+
                     Intent data = new Intent();
-                    data.putExtra("USER_ID", Profile.getCurrentProfile().getId());
+                    data.putExtra("USER_ID", profile.getId());
+                    data.putExtra("USER_NAME", fullName);
+                    data.putExtra("USER_EMAIL", ""); // Descobrir como recuperar email do facebook
 
                     setResult(RESULT_OK, data);
                     finish();
-                }
-                else {
-                    Profile profile = Profile.getCurrentProfile();
-                    Log.v("facebook - profile", profile.getFirstName());
                 }
             }
 
@@ -128,12 +144,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if(result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             String email = acct.getEmail();
-            String name = acct.getDisplayName();
+            String displayName = acct.getDisplayName();
             String token = acct.getId();
-            Log.d(TAG, "Login result: " + email + " " + name + " " + token);
+            /*Log.d(TAG, "Login result: " + email + " " + displayName + " " + token);
+            Log.d(TAG, "Display Name: " + displayName);
+            Log.d(TAG, "Family Name: " + acct.getFamilyName());
+            Log.d(TAG, "Given Name: " + acct.getGivenName());*/
 
             Intent data = new Intent();
             data.putExtra("USER_ID", token);
+            data.putExtra("USER_NAME", displayName);
+            data.putExtra("USER_EMAIL", email);
+
             setResult(RESULT_OK, data);
             finish();
 

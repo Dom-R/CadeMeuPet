@@ -163,19 +163,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                 // Create User
                 System.out.println(data.getStringExtra("USER_ID"));
-                createUserIfNotExist(data.getStringExtra("USER_ID"));
+                createUserIfNotExist(data.getStringExtra("USER_ID"), data.getStringExtra("USER_NAME"), data.getStringExtra("USER_EMAIL"));
 
             }
         }
     }
 
     public void databaseTest(View view) {
-        createUserIfNotExist("123");
+        createUserIfNotExist("123", "ABC", "a@a.com");
         //createUserIfNotExist("321");
         //createUserIfNotExist("432");
     }
 
-    public void createUserIfNotExist(final String token) {
+    public void createUserIfNotExist(final String token, final String name, final String email) {
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://cademeupet-4379e.firebaseio.com/users/" + token);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -188,8 +188,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     // TODO: handle the case where the data does not yet exist
                     System.out.println("Does not exist in db");
 
-                    startRegistration(token);
-
+                    startRegistration(token, name, email);
 
                     //UserInfo user = new UserInfo();
                     //mDatabase.child("users").child(token).setValue("");
@@ -201,9 +200,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         });
     }
 
-    public void startRegistration(String token) {
+    public void startRegistration(String token, String name, String email) {
         Intent intent = new Intent(this, RegisterActivity.class);
-        intent.putExtra("TOKEN", token);
+        intent.putExtra("USER_TOKEN", token);
+        intent.putExtra("USER_NAME", name);
+        intent.putExtra("USER_EMAIL", email);
         startActivity(intent);
     }
 

@@ -11,7 +11,7 @@
     tools:context="com.cademeupet.cademeupet.RegisterActivity">
 
     <Button
-        android:text="Button"
+        android:text="Register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -19,14 +19,44 @@
         android:id="@+id/register"
         android:onClick="registerUser" />
 
-    <EditText
-        android:id="@+id/fullname"
-        android:layout_width="fill_parent"
+    <TextView
+        android:text="Registration:"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Type your name!"
-        android:inputType="text"
+        android:textSize="70px"
+        android:id="@+id/textRegistration"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/inputFullname"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Full name"
+        android:inputType="text"
+        android:layout_below="@+id/textRegistration"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/inputEmail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:layout_below="@+id/inputFullname"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <!-- <EditText
+        android:id="@+id/inputNumber"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number"
+        android:inputType="phone"
+        android:layout_below="@+id/inputEmail"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" /> -->
 
 </RelativeLayout>
