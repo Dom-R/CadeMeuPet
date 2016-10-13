@@ -7,6 +7,12 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class PetDataActivity extends AppCompatActivity {
 
     @Override
@@ -15,12 +21,38 @@ public class PetDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pet_data);
 
         Intent intent = getIntent();
-        String petId = intent.getStringExtra("PET_DATA");
-        //new AlertDialog.Builder(this).setMessage(content).setTitle("Result").setIcon(android.R.drawable.ic_dialog_alert).show();
-        TextView textView = new TextView(this);
-        textView.setText(petId);
+        final String petId = intent.getStringExtra("PET_DATA");
 
-        ViewGroup layout = (ViewGroup) findViewById(R.id.activity_pet_data);
-        layout.addView(textView);
+        final PetDataActivity currentClass = this;
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("pets/" + petId);
+        // Attach a listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //String name = (String) dataSnapshot.getValue();
+                //System.out.println(name);
+                PetInfo pet = dataSnapshot.getValue(PetInfo.class);
+                System.out.println(pet.getName());
+
+                TextView textView = new TextView(currentClass);
+                textView.setText(pet.getName());
+
+                ViewGroup layout = (ViewGroup) findViewById(R.id.activity_pet_data);
+                layout.addView(textView);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+        // Insere no Banco de Dados o acesso ao ID de um cachorro
+        //FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //DatabaseReference myRef = database.getReference("message");
+
+        //myRef.setValue("Ped Id: " + petId);
     }
 }
