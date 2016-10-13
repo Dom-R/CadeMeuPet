@@ -253,10 +253,39 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         startActivity(intent);
     }
 
-    public void showPetActivity(String code) {
-        Intent intent = new Intent(this, PetDataActivity.class);
-        intent.putExtra("PET_DATA", code);
-        startActivity(intent);
+    public void showPetActivity(final String code) {
+
+        // Validate if pet exists
+        final MainActivity currentClass = this;
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("pets/" + code);
+
+        // Attach a listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                    Intent intent = new Intent(currentClass, PetDataActivity.class);
+                    intent.putExtra("PET_DATA", code);
+                    startActivity(intent);
+                    return;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+        new AlertDialog.Builder(this)
+                .setTitle("Invalid code!")
+                .setMessage("The inserted code is invalid! Please try again!")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     public void login(View view) {
