@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">CadêMeuPet</string>
     <string name="facebook_app_id">1217099188350148</string>
+    <string name="title_activity_pets_vault">PetsVaultActivity</string>
 </resources>
