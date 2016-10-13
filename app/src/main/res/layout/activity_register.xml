@@ -49,7 +49,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <!-- <EditText
+    <EditText
         android:id="@+id/inputNumber"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -57,6 +57,6 @@
         android:inputType="phone"
         android:layout_below="@+id/inputEmail"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" /> -->
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

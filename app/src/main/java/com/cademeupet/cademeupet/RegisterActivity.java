@@ -1,13 +1,9 @@
 package com.cademeupet.cademeupet;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -19,6 +15,7 @@ public class RegisterActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private EditText inputFullname;
     private EditText inputEmail;
+    private EditText inputNumber;
     private String userToken;
     private String userFullName;
     private String userEmail;
@@ -35,6 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         inputFullname = (EditText) findViewById(R.id.inputFullname);
         inputEmail = (EditText) findViewById(R.id.inputEmail);
+        inputNumber = (EditText) findViewById(R.id.inputNumber);
 
         inputFullname.setText(userFullName);
         inputEmail.setText(userEmail);
@@ -43,16 +41,14 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     public void registerUser(View view) {
-        Intent intent = getIntent();
-
-        //EditText number  = (EditText) findViewById(R.id.inputNumber);
-
         if(inputFullname.getText().toString().trim().equals("")) {
             inputFullname.setError("Full name is required");
         } else if (!isValidEmail(inputEmail.getText().toString())) {
             inputEmail.setError("Invalid Email");
+        } else if (inputNumber.getText().toString().trim().equals("")) {
+            inputFullname.setError("Phone number is required");
         } else {
-            UserInfo user = new UserInfo(inputFullname.getText().toString(), inputEmail.getText().toString());
+            UserInfo user = new UserInfo(inputFullname.getText().toString(), inputEmail.getText().toString(), inputNumber.getText().toString());
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
             mDatabase.child("users").child(userToken).setValue(user);
