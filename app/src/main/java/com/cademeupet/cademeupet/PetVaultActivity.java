@@ -29,6 +29,7 @@ public class PetVaultActivity extends AppCompatActivity {
     private static final String TAG = "PetVault Activity";
     private String userToken;
     private int PET_REGISTRATION_RESULT = 6948;
+    private int PET_DATACHANGE_RESULT = 9482;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +54,11 @@ public class PetVaultActivity extends AppCompatActivity {
 
         final View.OnClickListener buttonClick = new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println(v.getTag());
+            System.out.println(v.getTag());
 
-                Intent intent = new Intent(thisClass, PetDataActivity.class);
-                intent.putExtra("PET_DATA", (String) v.getTag());
-                startActivity(intent);
+            Intent intent = new Intent(thisClass, PetRegisterActivity.class);
+            intent.putExtra("PET_ID", (String) v.getTag());
+            startActivityForResult(intent, PET_DATACHANGE_RESULT);
             }
         };
 
@@ -108,6 +109,23 @@ public class PetVaultActivity extends AppCompatActivity {
                 registerNewPet(data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"));
             }
         }
+        if(requestCode == PET_DATACHANGE_RESULT) {
+            if(resultCode == RESULT_OK) {
+                updatePetInfo(data.getStringExtra("PET_ID"), data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"));
+            }
+        }
+    }
+
+    private void updatePetInfo(String petID, String petName, String petSex) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        PetInfo pet = new PetInfo(petName, petSex);
+
+        mDatabase.child("pets").child(petID).setValue(pet);
+
+        mDatabase.child("users").child(userToken).child("pets").child(petID).setValue(pet);
+
+        System.out.println("Pet inserted!");
     }
 
     public void registerNewPet(String petName, String petSex) {
