@@ -3,6 +3,7 @@ package com.cademeupet.cademeupet;
 public class PetInfo {
 
     public String name;
+    public String sex;
 
     public PetInfo() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -12,8 +13,9 @@ public class PetInfo {
         return name;
     }
 
-    public PetInfo(String name) {
+    public PetInfo(String name, String sex) {
         this.name = name;
+        this.sex = sex;
     }
 
 }

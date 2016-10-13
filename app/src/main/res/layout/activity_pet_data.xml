@@ -10,4 +10,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.cademeupet.cademeupet.PetDataActivity">
 
+    <TextView
+        android:text="Pet name:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelPetName"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textPetName"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/labelPetName"
+        android:layout_toEndOf="@+id/labelPetName"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp" />
+
 </RelativeLayout>

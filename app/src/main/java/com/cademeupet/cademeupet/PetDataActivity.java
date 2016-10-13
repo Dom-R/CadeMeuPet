@@ -36,11 +36,8 @@ public class PetDataActivity extends AppCompatActivity {
                 PetInfo pet = dataSnapshot.getValue(PetInfo.class);
                 System.out.println(pet.getName());
 
-                TextView textView = new TextView(currentClass);
-                textView.setText(pet.getName());
-
-                ViewGroup layout = (ViewGroup) findViewById(R.id.activity_pet_data);
-                layout.addView(textView);
+                TextView textPetName = (TextView) findViewById(R.id.textPetName);
+                textPetName.setText(pet.getName());
             }
 
             @Override
