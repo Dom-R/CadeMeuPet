@@ -21,12 +21,12 @@ public class PetDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pet_data);
 
         Intent intent = getIntent();
-        final String petId = intent.getStringExtra("PET_DATA");
+        final String petID = intent.getStringExtra("PET_DATA");
 
         final PetDataActivity currentClass = this;
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("pets/" + petId);
+        DatabaseReference ref = database.getReference("pets/" + petID);
         // Attach a listener to read the data at our posts reference
         ref.addValueEventListener(new ValueEventListener() {
             @Override
