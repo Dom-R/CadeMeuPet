@@ -28,7 +28,7 @@ public class PetVaultActivity extends AppCompatActivity {
 
     private static final String TAG = "PetVault Activity";
     private String userToken;
-    private String petName;
+    private int PET_REGISTRATION_RESULT = 6948;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,35 +94,23 @@ public class PetVaultActivity extends AppCompatActivity {
     }
 
     public void addNewPet() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Insert Pet Name:");
-
-        // Set up the input
-        final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                petName = input.getText().toString();
-                registerNewPet();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
+        Intent intent = new Intent(this, PetRegisterActivity.class);
+        startActivityForResult(intent, PET_REGISTRATION_RESULT);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Managed to Log in
+        if(requestCode == PET_REGISTRATION_RESULT) {
+            if (resultCode == RESULT_OK) {
+                // Create User
+                registerNewPet(data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"));
+            }
+        }
+    }
 
-    public void registerNewPet() {
+    public void registerNewPet(String petName, String petSex) {
         /*
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users/" + userToken);
@@ -161,7 +149,7 @@ public class PetVaultActivity extends AppCompatActivity {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        PetInfo pet = new PetInfo(petName);
+        PetInfo pet = new PetInfo(petName, petSex);
 
         SecureRandom random = new SecureRandom();
 

@@ -29,7 +29,8 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".PetVaultActivity"></activity>
+        <activity android:name=".PetVaultActivity" />
+        <activity android:name=".PetRegisterActivity"></activity>
     </application>
 
 </manifest>
