@@ -1,16 +1,23 @@
 package com.cademeupet.cademeupet;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.Profile;
@@ -23,7 +30,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.facebook.FacebookSdk;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final int QRCODE_RESULT = 3849;
     private GoogleApiClient mGoogleApiClient;
     private DatabaseReference mDatabase;
+    private String userToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 //String name = acct.getDisplayName();
                 String token = acct.getId();
                 Log.d(TAG, "Google token: " + token);
-                //findViewById(R.id.login_button).setVisibility(View.GONE);
+                createUserIfNotExist(acct.getId(), acct.getDisplayName(), acct.getEmail());
             }
         } else {
             Log.d(TAG, "Failed to auth user with Google!");
@@ -82,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // Verificacao se o usuario esta autenticado pelo facebook
         //Log.d(TAG, "Facebook user token: " + Profile.getCurrentProfile().getId());
         if (isFacebookLoggedIn()) {
-            //findViewById(R.id.login_button).setVisibility(View.GONE);
+            createUserIfNotExist(Profile.getCurrentProfile().getId(), Profile.getCurrentProfile().getName(), "");
         } else {
             Log.d(TAG, "Not logged in by facebook!");
         }
@@ -133,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         });
 
         builder.show();
-
     }
 
     @Override
@@ -159,8 +165,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // Managed to Log in
         if(requestCode == LOGIN_RESULT) {
             if (resultCode == RESULT_OK) {
-                //findViewById(R.id.login_button).setVisibility(View.GONE);
-
                 // Create User
                 System.out.println(data.getStringExtra("USER_ID"));
                 createUserIfNotExist(data.getStringExtra("USER_ID"), data.getStringExtra("USER_NAME"), data.getStringExtra("USER_EMAIL"));
@@ -169,10 +173,46 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
+    private void changeLoginButtonToProfile() {
+        findViewById(R.id.login_profile_button).setOnClickListener(new View.OnClickListener()
+           {
+               public void onClick(View v)
+               {
+                   openPetsVault();
+               }
+           }
+        );
+        TextView tv = (TextView) findViewById(R.id.login_profile_button);
+        tv.setText("Profile");
+    }
+
     public void databaseTest(View view) {
-        createUserIfNotExist("123", "ABC", "a@a.com");
+        //createUserIfNotExist("123", "ABC", "a@a.com");
         //createUserIfNotExist("321");
         //createUserIfNotExist("432");
+
+        // Send Notification
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setSmallIcon(R.drawable.com_facebook_button_icon);
+        mBuilder.setContentTitle("Cadê Meu Pet");
+        mBuilder.setContentText("Alguém acessou os dados do seu animal de estimação! Clique aqui para ver onde foi!");
+
+        Intent resultIntent = new Intent(this, PetDataActivity.class);
+        resultIntent.putExtra("PET_DATA", "123");
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // notificationID allows you to update the notification later on.
+        mNotificationManager.notify(123, mBuilder.build());
+        // End send notification
+
     }
 
     public void createUserIfNotExist(final String token, final String name, final String email) {
@@ -183,6 +223,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 if (snapshot.exists()) {
                     // TODO: handle the case where the data already exists
                     System.out.println("User Exist in db");
+
+                    userToken = token;
+
+                    changeLoginButtonToProfile();
                 }
                 else {
                     // TODO: handle the case where the data does not yet exist
@@ -190,8 +234,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                     startRegistration(token, name, email);
 
-                    //UserInfo user = new UserInfo();
-                    //mDatabase.child("users").child(token).setValue("");
+                    userToken = token;
+
+                    changeLoginButtonToProfile();
                 }
             }
 
@@ -217,6 +262,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void login(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, LOGIN_RESULT);
+    }
+
+    public void openPetsVault() {
+        Intent intent = new Intent(this, PetVaultActivity.class);
+        intent.putExtra("USER_TOKEN", userToken);
+        startActivity(intent);
     }
 
     @Override

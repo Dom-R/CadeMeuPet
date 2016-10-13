@@ -17,10 +17,10 @@
         android:id="@+id/buttonQRCode"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:onClick="readQRCode (MainActivity)"/>
+        android:onClick="readQRCode"/>
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/login_profile_button"
         android:text="Login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
