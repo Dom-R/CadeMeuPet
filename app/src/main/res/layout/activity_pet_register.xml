@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_pet_register"
     android:layout_width="match_parent"
@@ -29,29 +30,21 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <EditText
-        android:id="@+id/inputPetName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="Pet name"
-        android:inputType="text"
-        android:layout_below="@+id/textRegistration"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
 
     <RadioGroup
         android:id="@+id/radioGroupSex"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@+id/inputPetName">
+        android:layout_below="@+id/inputPetName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <TextView
             android:id="@+id/textPetSex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" Sex"
+            android:text="Sex"
             android:textSize="18sp"
             android:textAlignment="viewStart"
             android:textAllCaps="false"
@@ -65,6 +58,45 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Female"/>
+
     </RadioGroup>
+
+    <ImageButton
+        app:srcCompat="@android:drawable/ic_menu_gallery"
+        android:id="@+id/imageButton"
+        android:elevation="0dp"
+        android:layout_marginTop="19dp"
+        android:layout_below="@+id/textRegistration"
+        android:layout_centerHorizontal="true"
+        android:onClick="uploadPetImage"
+        android:layout_width="512px"
+        android:layout_height="512px" />
+
+    <TextView
+        android:text="Upload Pet Image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imagePet"
+        android:layout_below="@+id/imageButton"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Pet name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textPetName"
+        android:layout_below="@+id/imagePet"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/inputPetName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:layout_below="@+id/textPetName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

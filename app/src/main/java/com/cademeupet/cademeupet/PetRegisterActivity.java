@@ -1,26 +1,42 @@
 package com.cademeupet.cademeupet;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
 
 public class PetRegisterActivity extends AppCompatActivity {
 
+    private static final int PICK_IMAGE_RESULT = 2845;
     private EditText inputPetName;
     private RadioGroup inputPetSex;
     private String petID;
+    private Uri file;
+    private StorageReference storageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +45,9 @@ public class PetRegisterActivity extends AppCompatActivity {
 
         inputPetName = (EditText) findViewById(R.id.inputPetName);
         inputPetSex = (RadioGroup) findViewById(R.id.radioGroupSex);
+
+        // Create a storage reference from our app
+        storageRef = FirebaseStorage.getInstance().getReference();
 
         Intent intent = getIntent();
         petID = intent.getStringExtra("PET_ID");
@@ -49,6 +68,31 @@ public class PetRegisterActivity extends AppCompatActivity {
 
                     EditText textPetName = (EditText) findViewById(R.id.inputPetName);
                     textPetName.setText(pet.getName());
+
+                    RadioButton radioButton;
+                    if(pet.getSex().equals("Male"))
+                        radioButton = (RadioButton) findViewById(R.id.maleSex);
+                    else
+                        radioButton = (RadioButton) findViewById(R.id.femaleSex);
+                    radioButton.setChecked(true);
+
+                    StorageReference petImage = storageRef.child("images/" + petID);
+
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    petImage.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            // Data for "images/island.jpg" is returns, use this as needed
+                            ImageButton btn = (ImageButton)findViewById(R.id.imageButton);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            btn.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 512, 512, false));
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
                 }
 
                 @Override
@@ -56,7 +100,6 @@ public class PetRegisterActivity extends AppCompatActivity {
                     System.out.println("The read failed: " + databaseError.getCode());
                 }
             });
-
         }
     }
 
@@ -77,8 +120,36 @@ public class PetRegisterActivity extends AppCompatActivity {
             data.putExtra("PET_SEX", radioButton.getText());
             if(petID != null)
                 data.putExtra("PET_ID", petID);
+            if(file != null)
+                data.putExtra("PET_IMAGE", file.toString());
             setResult(RESULT_OK, data);
             finish();
+        }
+    }
+
+    public void uploadPetImage(View view) {
+        Intent intent = new Intent();
+        // Show only images, no videos or anything else
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        // Always show the chooser (if there are multiple options available)
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_RESULT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_RESULT && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            file = data.getData();
+
+            try {
+                ImageButton btn = (ImageButton)findViewById(R.id.imageButton);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), file);
+                btn.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 512, 512, false));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
