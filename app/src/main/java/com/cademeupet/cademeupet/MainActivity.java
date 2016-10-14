@@ -1,21 +1,15 @@
 package com.cademeupet.cademeupet;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -42,15 +36,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final int LOGIN_RESULT = 3627;
     private static final int QRCODE_RESULT = 3849;
     private GoogleApiClient mGoogleApiClient;
-    private DatabaseReference mDatabase;
     private String userToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
@@ -192,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //createUserIfNotExist("432");
 
         // Send Notification
+        /*
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setSmallIcon(R.drawable.com_facebook_button_icon);
         mBuilder.setContentTitle("Cadê Meu Pet");
@@ -212,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // notificationID allows you to update the notification later on.
         mNotificationManager.notify(123, mBuilder.build());
         // End send notification
+        */
 
     }
 
