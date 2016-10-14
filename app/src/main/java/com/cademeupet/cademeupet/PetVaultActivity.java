@@ -2,6 +2,8 @@ package com.cademeupet.cademeupet;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +15,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -30,6 +37,8 @@ public class PetVaultActivity extends AppCompatActivity {
     private String userToken;
     private int PET_REGISTRATION_RESULT = 6948;
     private int PET_DATACHANGE_RESULT = 9482;
+    private StorageReference  storageRef;
+    private UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +101,8 @@ public class PetVaultActivity extends AppCompatActivity {
             }
         });
 
+        // Create a storage reference from our app
+        storageRef = FirebaseStorage.getInstance().getReference();
     }
 
     public void addNewPet() {
@@ -106,7 +117,7 @@ public class PetVaultActivity extends AppCompatActivity {
         if(requestCode == PET_REGISTRATION_RESULT) {
             if (resultCode == RESULT_OK) {
                 // Create User
-                registerNewPet(data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"));
+                registerNewPet(data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"), Uri.parse(data.getStringExtra("PET_IMAGE")));
             }
         }
         if(requestCode == PET_DATACHANGE_RESULT) {
@@ -128,7 +139,7 @@ public class PetVaultActivity extends AppCompatActivity {
         System.out.println("Pet inserted!");
     }
 
-    public void registerNewPet(String petName, String petSex) {
+    public void registerNewPet(String petName, String petSex, Uri file) {
         /*
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users/" + userToken);
@@ -178,6 +189,26 @@ public class PetVaultActivity extends AppCompatActivity {
         mDatabase.child("pets").child(petID).setValue(pet);
 
         mDatabase.child("users").child(userToken).child("pets").child(petID).setValue(pet);
+
+        if(file != null) {
+            StorageReference riversRef = storageRef.child("images/" + petID);
+            uploadTask = riversRef.putFile(file);
+
+            // Register observers to listen for when the download is done or if it fails
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    System.out.println(downloadUrl);
+                }
+            });
+        }
 
         System.out.println("Pet inserted!");
 
