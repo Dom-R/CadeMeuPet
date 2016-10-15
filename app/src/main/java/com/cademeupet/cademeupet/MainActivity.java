@@ -248,37 +248,38 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void showPetActivity(final String code) {
 
-        // Validate if pet exists
         final MainActivity currentClass = this;
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("pets/" + code);
-
-        // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
+        // Validate if pet exists
+        DatabaseReference petsRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://cademeupet-4379e.firebaseio.com/pets/" + code);
+        petsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // TODO: handle the case where the data already exists
+                    System.out.println("Pet exist in db");
 
-                for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     Intent intent = new Intent(currentClass, PetDataActivity.class);
                     intent.putExtra("PET_DATA", code);
                     startActivity(intent);
-                    return;
                 }
+                else {
+                    // TODO: handle the case where the data does not yet exist
+                    System.out.println("Pet does not exist in db");
 
+                    new AlertDialog.Builder(currentClass)
+                            .setTitle("Invalid code!")
+                            .setMessage("The inserted code is invalid! Please try again!")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setCancelable(false)
+                            .setNegativeButton("Exit", null)
+                            .show();
+                }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
-
-        new AlertDialog.Builder(this)
-                .setTitle("Invalid code!")
-                .setMessage("The inserted code is invalid! Please try again!")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
     }
 
     public void login(View view) {
