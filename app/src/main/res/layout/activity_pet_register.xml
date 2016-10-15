@@ -46,7 +46,6 @@
             android:layout_height="wrap_content"
             android:text="Sex"
             android:textSize="18sp"
-            android:textAlignment="viewStart"
             android:textAllCaps="false"
             android:fontFamily="sans-serif" />
 
