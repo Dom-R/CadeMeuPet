@@ -117,7 +117,10 @@ public class PetVaultActivity extends AppCompatActivity {
         if(requestCode == PET_REGISTRATION_RESULT) {
             if (resultCode == RESULT_OK) {
                 // Create User
-                registerNewPet(data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"), Uri.parse(data.getStringExtra("PET_IMAGE")));
+                Uri uri = null;
+                if(data.getStringExtra("PET_IMAGE") != null)
+                    uri = Uri.parse(data.getStringExtra("PET_IMAGE"));
+                registerNewPet(data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"), uri);
             }
         }
         if(requestCode == PET_DATACHANGE_RESULT) {
