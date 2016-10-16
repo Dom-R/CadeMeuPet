@@ -14,6 +14,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,6 +63,8 @@ public class PetDataActivity extends AppCompatActivity {
             }
         });
 
+        final PetDataActivity currentClass = this;
+
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
@@ -74,7 +82,40 @@ public class PetDataActivity extends AppCompatActivity {
                         //String name = (String) dataSnapshot.getValue();
                         //System.out.println(name);
 
-                        PetInfo pet = dataSnapshot.getValue(PetInfo.class);
+                        final PetInfo pet = dataSnapshot.getValue(PetInfo.class);
+
+                        String userID = pet.getUserID();
+
+                        // Recupera dados do dono para enviar email
+                        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference ref = database.getReference("users/" + userID);
+
+                        ref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                //String name = (String) dataSnapshot.getValue();
+                                //System.out.println(name);
+
+                                String name = (String) dataSnapshot.child("name").getValue();
+                                String email = (String) dataSnapshot.child("email").getValue();
+
+                                // Instantiate the RequestQueue.
+                                RequestQueue queue = Volley.newRequestQueue(currentClass);
+                                String url ="http://lasid.sor.ufscar.br/twittersearch/country/registration.php?email=" + email + "&petName=" + pet.getName() + "&location=" + pet.getLastLocation() + "&userName=" + name;
+
+                                System.out.println("URL: " + url);
+
+                                // Request a string response from the provided URL.
+                                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, null, null);
+                                // Add the request to the RequestQueue.
+                                queue.add(stringRequest);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                System.out.println("The read failed: " + databaseError.getCode());
+                            }
+                        });
 
                         pet.setLastLocation(location.getLatitude() + "," + location.getLongitude());
 
