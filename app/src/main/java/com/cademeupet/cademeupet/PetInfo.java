@@ -8,6 +8,7 @@ public class PetInfo {
     public String sex;
     public String lastLocation;
     public String userID;
+    public String specie;
 
     public PetInfo() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
@@ -25,6 +26,10 @@ public class PetInfo {
         return sex;
     }
 
+    public String getSpecie() {
+        return specie;
+    }
+
     public String getLastLocation() {
         return lastLocation;
     }
@@ -33,10 +38,11 @@ public class PetInfo {
         this.lastLocation = lastLocation;
     }
 
-    public PetInfo(String userID, String name, String sex) {
+    public PetInfo(String userID, String name, String sex, String specie) {
         this.userID = userID;
         this.name = name;
         this.sex = sex;
+        this.specie = specie;
         lastLocation = ",";
     }
 

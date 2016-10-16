@@ -1,18 +1,13 @@
 package com.cademeupet.cademeupet;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,8 +23,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Calendar;
-import java.util.Random;
 
 public class PetVaultActivity extends AppCompatActivity {
 
@@ -123,20 +116,23 @@ public class PetVaultActivity extends AppCompatActivity {
                 Uri uri = null;
                 if(data.getStringExtra("PET_IMAGE") != null)
                     uri = Uri.parse(data.getStringExtra("PET_IMAGE"));
-                registerNewPet(data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"), uri);
+                registerNewPet(uri, data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"), data.getStringExtra("PET_SPECIE"));
             }
         }
         if(requestCode == PET_DATACHANGE_RESULT) {
             if(resultCode == RESULT_OK) {
-                updatePetInfo(data.getStringExtra("PET_ID"), data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"));
+                Uri uri = null;
+                if(data.getStringExtra("PET_IMAGE") != null)
+                    uri = Uri.parse(data.getStringExtra("PET_IMAGE"));
+                updatePetInfo(uri, data.getStringExtra("PET_ID"), data.getStringExtra("PET_NAME"), data.getStringExtra("PET_SEX"), data.getStringExtra("PET_SPECIE"));
             }
         }
     }
 
-    private void updatePetInfo(String petID, String petName, String petSex) {
+    private void updatePetInfo(Uri file, String petID, String petName, String petSex, String petSpecie) {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        PetInfo pet = new PetInfo(userToken, petName, petSex);
+        PetInfo pet = new PetInfo(userToken, petName, petSex, petSpecie);
 
         mDatabase.child("pets").child(petID).setValue(pet);
 
@@ -145,46 +141,11 @@ public class PetVaultActivity extends AppCompatActivity {
         System.out.println("Pet inserted!");
     }
 
-    public void registerNewPet(String petName, String petSex, Uri file) {
-        /*
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("users/" + userToken);
-
-        // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //String name = (String) dataSnapshot.getValue();
-                //System.out.println(name);
-                UserInfo user = dataSnapshot.getValue(UserInfo.class);
-                System.out.println(user.getName());
-
-                // Add o pet
-                PetInfo pet = new PetInfo(petName);
-
-                Random r = new Random(System.currentTimeMillis() / 1000);
-                String petID = Integer.toString(r.nextInt(32768));
-
-                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                mDatabase.child("pets").child(petID).setValue(pet);
-
-                user.addPet(petID);
-
-                mDatabase.child("users").child("109566306045830493130").setValue(user);
-
-                System.out.println("Pet inserted!");
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });*/
+    public void registerNewPet(Uri file, String petName, String petSex, String petSpecie) {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        PetInfo pet = new PetInfo(userToken, petName, petSex);
+        PetInfo pet = new PetInfo(userToken, petName, petSex, petSpecie);
 
         SecureRandom random = new SecureRandom();
 
@@ -219,4 +180,40 @@ public class PetVaultActivity extends AppCompatActivity {
         System.out.println("Pet inserted!");
 
     }
+
+            /*
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("users/" + userToken);
+
+        // Attach a listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //String name = (String) dataSnapshot.getValue();
+                //System.out.println(name);
+                UserInfo user = dataSnapshot.getValue(UserInfo.class);
+                System.out.println(user.getName());
+
+                // Add o pet
+                PetInfo pet = new PetInfo(petName);
+
+                Random r = new Random(System.currentTimeMillis() / 1000);
+                String petID = Integer.toString(r.nextInt(32768));
+
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                mDatabase.child("pets").child(petID).setValue(pet);
+
+                user.addPet(petID);
+
+                mDatabase.child("users").child("109566306045830493130").setValue(user);
+
+                System.out.println("Pet inserted!");
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });*/
 }
