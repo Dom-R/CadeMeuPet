@@ -57,7 +57,7 @@ public class PetVaultActivity extends AppCompatActivity {
 
         // Get registered pets
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("users/" + userToken + "/pets");
+        DatabaseReference ref = database.getReference("pets");
 
         final PetVaultActivity thisClass = this;
 
@@ -84,11 +84,14 @@ public class PetVaultActivity extends AppCompatActivity {
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     PetInfo pet = messageSnapshot.getValue(PetInfo.class);
 
-                    Button btn = new Button(thisClass);
-                    btn.setText(pet.getName());
-                    btn.setOnClickListener(buttonClick);
-                    ll.addView(btn);
-                    btn.setTag(messageSnapshot.getKey());
+                    // Pet belongs to the user
+                    if(pet.getUserID().equals(userToken)) {
+                        Button btn = new Button(thisClass);
+                        btn.setText(pet.getName());
+                        btn.setOnClickListener(buttonClick);
+                        ll.addView(btn);
+                        btn.setTag(messageSnapshot.getKey());
+                    }
                 }
 
                 //String abc = (String) dataSnapshot.getValue();
@@ -133,7 +136,7 @@ public class PetVaultActivity extends AppCompatActivity {
     private void updatePetInfo(String petID, String petName, String petSex) {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        PetInfo pet = new PetInfo(petName, petSex);
+        PetInfo pet = new PetInfo(userToken, petName, petSex);
 
         mDatabase.child("pets").child(petID).setValue(pet);
 
@@ -181,17 +184,17 @@ public class PetVaultActivity extends AppCompatActivity {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        PetInfo pet = new PetInfo(petName, petSex);
+        PetInfo pet = new PetInfo(userToken, petName, petSex);
 
         SecureRandom random = new SecureRandom();
 
         String petID = new BigInteger(130, random).toString(32);
 
-        petID = petID.substring(0, Math.min(petID.length(), 6));
+        petID = petID.substring(0, Math.min(petID.length(), 6)).toUpperCase();
 
         mDatabase.child("pets").child(petID).setValue(pet);
 
-        mDatabase.child("users").child(userToken).child("pets").child(petID).setValue(pet);
+        //mDatabase.child("users").child(userToken).child("pets").child(petID).setValue(pet);
 
         if(file != null) {
             StorageReference riversRef = storageRef.child("images/" + petID);

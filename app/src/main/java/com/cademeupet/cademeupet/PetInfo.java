@@ -7,9 +7,14 @@ public class PetInfo {
     public String name;
     public String sex;
     public String lastLocation;
+    public String userID;
 
     public PetInfo() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
+
+    public String getUserID() {
+        return userID;
     }
 
     public String getName() {
@@ -28,7 +33,8 @@ public class PetInfo {
         this.lastLocation = lastLocation;
     }
 
-    public PetInfo(String name, String sex) {
+    public PetInfo(String userID, String name, String sex) {
+        this.userID = userID;
         this.name = name;
         this.sex = sex;
         lastLocation = ",";
