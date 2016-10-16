@@ -9,11 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,7 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
@@ -37,6 +37,7 @@ public class PetRegisterActivity extends AppCompatActivity {
     private String petID;
     private Uri file;
     private StorageReference storageRef;
+    private Spinner spinnerSpecie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class PetRegisterActivity extends AppCompatActivity {
 
         inputPetName = (EditText) findViewById(R.id.inputPetName);
         inputPetSex = (RadioGroup) findViewById(R.id.radioGroupSex);
+        spinnerSpecie = (Spinner) findViewById(R.id.spinnerSpecie);
 
         // Create a storage reference from our app
         storageRef = FirebaseStorage.getInstance().getReference();
@@ -66,9 +68,11 @@ public class PetRegisterActivity extends AppCompatActivity {
                     PetInfo pet = dataSnapshot.getValue(PetInfo.class);
                     System.out.println(pet.getName());
 
+                    // Setting pet name
                     EditText textPetName = (EditText) findViewById(R.id.inputPetName);
                     textPetName.setText(pet.getName());
 
+                    // Setting pet sex
                     RadioButton radioButton;
                     if(pet.getSex().equals("Male"))
                         radioButton = (RadioButton) findViewById(R.id.maleSex);
@@ -76,9 +80,18 @@ public class PetRegisterActivity extends AppCompatActivity {
                         radioButton = (RadioButton) findViewById(R.id.femaleSex);
                     radioButton.setChecked(true);
 
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(currentClass, R.array.array_species, android.R.layout.simple_spinner_item);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerSpecie.setAdapter(adapter);
+                    if (!pet.getSpecie().equals(null)) {
+                        int spinnerPosition = adapter.getPosition(pet.getSpecie());
+                        spinnerSpecie.setSelection(spinnerPosition);
+                    }
+
+                    // Recover Image
                     StorageReference petImage = storageRef.child("images/" + petID);
 
-                    final long ONE_MEGABYTE = 1024 * 1024;
+                    final long ONE_MEGABYTE = 16384 * 16384;
                     petImage.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
@@ -122,6 +135,7 @@ public class PetRegisterActivity extends AppCompatActivity {
                 data.putExtra("PET_ID", petID);
             if(file != null)
                 data.putExtra("PET_IMAGE", file.toString());
+            data.putExtra("PET_SPECIE", spinnerSpecie.getSelectedItem().toString());
             setResult(RESULT_OK, data);
             finish();
         }
