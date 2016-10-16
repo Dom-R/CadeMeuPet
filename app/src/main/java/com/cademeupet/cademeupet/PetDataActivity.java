@@ -3,15 +3,20 @@ package com.cademeupet.cademeupet;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -20,11 +25,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class PetDataActivity extends AppCompatActivity {
 
@@ -33,6 +42,7 @@ public class PetDataActivity extends AppCompatActivity {
     private Criteria criteria;
     private Looper looper;
     private LocationListener locationListener;
+    private StorageReference storageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +51,9 @@ public class PetDataActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         final String petID = intent.getStringExtra("PET_DATA");
+
+        // Create a storage reference from our app
+        storageRef = FirebaseStorage.getInstance().getReference();
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("pets/" + petID);
@@ -53,8 +66,33 @@ public class PetDataActivity extends AppCompatActivity {
                 PetInfo pet = dataSnapshot.getValue(PetInfo.class);
                 System.out.println(pet.getName());
 
+                // Recover Image
+                StorageReference petImage = storageRef.child("images/" + petID);
+
+                final long ONE_MEGABYTE = 16384 * 16384;
+                petImage.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        // Data for "images/island.jpg" is returns, use this as needed
+                        ImageView btn = (ImageView)findViewById(R.id.imagePetImage);
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        btn.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 550, 550, false));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+
                 TextView textPetName = (TextView) findViewById(R.id.textPetName);
                 textPetName.setText(pet.getName());
+
+                TextView textPetSex = (TextView) findViewById(R.id.textPetSex);
+                textPetSex.setText(pet.getSex());
+
+                TextView textPetSpecie = (TextView) findViewById(R.id.textPetSpecie);
+                textPetSpecie.setText(pet.getSpecie());
             }
 
             @Override
@@ -98,6 +136,16 @@ public class PetDataActivity extends AppCompatActivity {
 
                                 String name = (String) dataSnapshot.child("name").getValue();
                                 String email = (String) dataSnapshot.child("email").getValue();
+                                String phone = (String) dataSnapshot.child("phoneNumber").getValue();
+
+                                TextView textOwnerName = (TextView) findViewById(R.id.textOwnerName);
+                                textOwnerName.setText(name);
+
+                                TextView textOwnerEmail = (TextView) findViewById(R.id.textOwnerEmail);
+                                textOwnerEmail.setText(email);
+
+                                TextView textOwnerPhone = (TextView) findViewById(R.id.textOwnerPhone);
+                                textOwnerPhone.setText(phone);
 
                                 // Instantiate the RequestQueue.
                                 RequestQueue queue = Volley.newRequestQueue(currentClass);
@@ -106,9 +154,21 @@ public class PetDataActivity extends AppCompatActivity {
                                 System.out.println("URL: " + url);
 
                                 // Request a string response from the provided URL.
-                                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, null, null);
+                                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                // Display the first 500 characters of the response string.
+                                                System.out.println("Worked!");
+                                            }
+                                        }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        System.out.println("That didn't work!");
+                                    }
+                                });
                                 // Add the request to the RequestQueue.
-                                queue.add(stringRequest);
+                                //queue.add(stringRequest); // TODO: REMOVER QUANDO FOR TESTAR ENVIO DE EMAIL
                             }
 
                             @Override
