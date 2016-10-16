@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void insertCode(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Insira o código");
+        builder.setTitle("Insert a code");
 
         // Set up the input
         final EditText input = new EditText(this);
