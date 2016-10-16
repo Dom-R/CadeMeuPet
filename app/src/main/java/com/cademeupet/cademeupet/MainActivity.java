@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -30,13 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -119,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         final EditText input = new EditText(this);
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        input.setFilters(new InputFilter[] {new InputFilter.AllCaps()});
         builder.setView(input);
 
         // Set up the buttons
@@ -184,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         tv.setText("Profile");
     }
 
-    public void databaseTest(View view) throws IOException {
+    public void databaseTest(View view) {
         //createUserIfNotExist("123", "ABC", "a@a.com");
         //createUserIfNotExist("321");
         //createUserIfNotExist("432");
