@@ -20,7 +20,7 @@
         android:onClick="readQRCode"/>
 
     <Button
-        android:id="@+id/login_profile_button"
+        android:id="@+id/buttonLoginORProfile"
         android:text="Login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         android:text="Test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button2"
+        android:id="@+id/buttonTest"
         android:onClick="databaseTest" />
 
 </RelativeLayout>

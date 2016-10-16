@@ -17,15 +17,6 @@ public class UserInfo {
         return name;
     }
 
-    /*
-    public void addPet(String id) {
-        petsID.add(id);
-    }
-
-    public ArrayList<String> getPetList() {
-        return petsID;
-    }*/
-
     public UserInfo(String name, String email, String phoneNumber) {
         this.name = name;
         this.email = email;

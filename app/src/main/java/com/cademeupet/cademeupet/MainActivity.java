@@ -29,6 +29,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -84,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         } else {
             Log.d(TAG, "Not logged in by facebook!");
         }
-
     }
 
     public void readQRCode(View view) {
@@ -165,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void changeLoginButtonToProfile() {
-        findViewById(R.id.login_profile_button).setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.buttonLoginORProfile).setOnClickListener(new View.OnClickListener()
            {
                public void onClick(View v)
                {
@@ -173,11 +180,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                }
            }
         );
-        TextView tv = (TextView) findViewById(R.id.login_profile_button);
+        TextView tv = (TextView) findViewById(R.id.buttonLoginORProfile);
         tv.setText("Profile");
     }
 
-    public void databaseTest(View view) {
+    public void databaseTest(View view) throws IOException {
         //createUserIfNotExist("123", "ABC", "a@a.com");
         //createUserIfNotExist("321");
         //createUserIfNotExist("432");
@@ -205,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mNotificationManager.notify(123, mBuilder.build());
         // End send notification
         */
-
     }
 
     public void createUserIfNotExist(final String token, final String name, final String email) {
@@ -216,6 +222,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 if (snapshot.exists()) {
                     // TODO: handle the case where the data already exists
                     System.out.println("User Exist in db");
+
+                    // Get Firebase Token to send Notification and update it on the profile
+                    System.out.println("Firebase Instance ID: " + FirebaseInstanceId.getInstance().getToken());
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl("https://cademeupet-4379e.firebaseio.com/users/" + token + "/NotificationID");
+                    ref.setValue(FirebaseInstanceId.getInstance().getToken());
 
                     userToken = token;
 
