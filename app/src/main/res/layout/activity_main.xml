@@ -23,7 +23,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textColor="#FFFFFF"
-        android:background="@drawable/mainbuttonshape" />
+        android:background="@drawable/loginbuttonshape" />
 
     <Button
         android:text="Test"
@@ -55,7 +55,7 @@
         android:id="@+id/buttonQRCode"
         android:onClick="readQRCode"
         android:textColor="#FFFFFF"
-        android:background="@drawable/topbuttonshape"
+        android:background="@drawable/mainbuttonshape"
         android:layout_alignBottom="@+id/buttonInsertCode"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -64,15 +64,13 @@
         android:layout_alignParentEnd="true" />
 
     <ImageView
-        app:srcCompat="@mipmap/ic_cademeupet_logo"
-        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:srcCompat="@drawable/cademeupet_logo"
+        android:id="@+id/imageView6"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_above="@+id/buttonQRCode" />
 
 </RelativeLayout>
