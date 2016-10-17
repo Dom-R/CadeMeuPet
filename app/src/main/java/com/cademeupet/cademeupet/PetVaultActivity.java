@@ -2,7 +2,6 @@ package com.cademeupet.cademeupet;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -171,7 +170,7 @@ public class PetVaultActivity extends AppCompatActivity {
             // Register observers to listen for when the download is done or if it fails
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
-                public void onFailure(@NonNull Exception exception) {
+                public void onFailure(Exception exception) {
                     // Handle unsuccessful uploads
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -190,6 +189,7 @@ public class PetVaultActivity extends AppCompatActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("users/" + userToken);
 
+        final String finalPetID = petID;
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -201,7 +201,7 @@ public class PetVaultActivity extends AppCompatActivity {
 
                 // Instantiate the RequestQueue.
                 RequestQueue queue = Volley.newRequestQueue(currentClass);
-                String url ="http://lasid.sor.ufscar.br/twittersearch/country/registration.php?email=" + email + "&petName=" + petName + "&location=" + "NaN,NaN" + "&userName=" + name; // Trocar
+                String url ="http://lasid.sor.ufscar.br/twittersearch/country/qrcode.php?email=" + email + "&username=" + name + "&petName=" + petName + "&petToken=" + finalPetID;
 
                 System.out.println("URL: " + url);
 
