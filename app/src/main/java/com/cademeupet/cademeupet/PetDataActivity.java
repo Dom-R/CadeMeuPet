@@ -169,6 +169,10 @@ public class PetDataActivity extends AppCompatActivity {
                                 });
                                 // Add the request to the RequestQueue.
                                 //queue.add(stringRequest); // TODO: REMOVER QUANDO FOR TESTAR ENVIO DE EMAIL
+
+                                // Envio de notificação por cURL
+                                // curl --header "Authorization: key=AIzaSyD56xONeA1zPaEojB0lVgg69cmTNgz6YjY" --header Content-Type:"application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification\": { \"title\": \"Portugal vs. Denmark\",\"body\": \"5 to 1\"},\"to\" : \"fPFbflxXlKs:APA91bFHeMtLgcJwnrcIwBJ5yFEBXiRtEuQSkknshIQ2M-wLiLgLf0t0T7AGlvONG1DD9swc_B4t7DFyTt0OCV0AnJ0LUDd5WmoLFL90o9UpiHfWud-_rEMeTJMmqT0IkCXDFuwqELNG\"}"
+                                // https://firebase.google.com/docs/cloud-messaging/server
                             }
 
                             @Override
