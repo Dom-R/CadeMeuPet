@@ -9,7 +9,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -141,11 +148,11 @@ public class PetVaultActivity extends AppCompatActivity {
         System.out.println("Pet inserted!");
     }
 
-    public void registerNewPet(Uri file, String petName, String petSex, String petSpecie) {
+    public void registerNewPet(Uri file, final String petName, String petSex, String petSpecie) {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        PetInfo pet = new PetInfo(userToken, petName, petSex, petSpecie);
+        final PetInfo pet = new PetInfo(userToken, petName, petSex, petSpecie);
 
         SecureRandom random = new SecureRandom();
 
@@ -176,6 +183,51 @@ public class PetVaultActivity extends AppCompatActivity {
                 }
             });
         }
+
+        final PetVaultActivity currentClass = this;
+
+        // Recupera dados do dono para enviar email
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("users/" + userToken);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //String name = (String) dataSnapshot.getValue();
+                //System.out.println(name);
+
+                String name = (String) dataSnapshot.child("name").getValue();
+                String email = (String) dataSnapshot.child("email").getValue();
+
+                // Instantiate the RequestQueue.
+                RequestQueue queue = Volley.newRequestQueue(currentClass);
+                String url ="http://lasid.sor.ufscar.br/twittersearch/country/registration.php?email=" + email + "&petName=" + petName + "&location=" + "NaN,NaN" + "&userName=" + name; // Trocar
+
+                System.out.println("URL: " + url);
+
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                // Display the first 500 characters of the response string.
+                                System.out.println("Worked!");
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("That didn't work!");
+                    }
+                });
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest); // TODO: REMOVER QUANDO FOR TESTAR ENVIO DE EMAIL
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
 
         System.out.println("Pet inserted!");
 
