@@ -3,7 +3,6 @@ package com.cademeupet.cademeupet;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -208,6 +207,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mNotificationManager.notify(123, mBuilder.build());
         // End send notification
         */
+        Intent intent = new Intent(this, PetVaultActivity.class);
+        userToken = "1431781136836494";
+        intent.putExtra("USER_TOKEN", "" + userToken);
+        startActivity(intent);
     }
 
     public void createUserIfNotExist(final String token, final String name, final String email) {
@@ -302,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.e(TAG, "onConnectionFailed: " + connectionResult.getErrorMessage());
     }
 }
