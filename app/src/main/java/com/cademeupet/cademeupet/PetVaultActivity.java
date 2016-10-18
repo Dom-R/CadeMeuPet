@@ -1,11 +1,14 @@
 package com.cademeupet.cademeupet;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -79,6 +82,7 @@ public class PetVaultActivity extends AppCompatActivity {
 
                 LinearLayout ll = (LinearLayout) findViewById(R.id.hsvLinearLayout);
                 ll.removeAllViews();
+//                ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     PetInfo pet = messageSnapshot.getValue(PetInfo.class);
@@ -86,6 +90,11 @@ public class PetVaultActivity extends AppCompatActivity {
                     // Pet belongs to the user
                     if(pet.getUserID().equals(userToken)) {
                         Button btn = new Button(thisClass);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(0, 0, 0, 20);
+                        btn.setLayoutParams(params);
+                        btn.setBackgroundResource(R.drawable.mainbuttonshape);
+                        btn.setTextColor(Color.WHITE);
                         btn.setText(pet.getName());
                         btn.setOnClickListener(buttonClick);
                         ll.addView(btn);

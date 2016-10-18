@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/buttonTest"
         android:onClick="databaseTest"
-        android:visibility="gone" />
+        android:visibility="gone" />     <!--MUDAR PARA "visible" PARA FAZER TESTE-->
 
     <Button
         android:text="Insert code"

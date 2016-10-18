@@ -70,37 +70,17 @@
         android:layout_alignLeft="@+id/textOwnerEmail"
         android:layout_alignStart="@+id/textOwnerEmail" />
 
-    <TextView
-        android:text="Sex:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/labelPetSex"
-        android:textSize="24sp"
-        android:layout_below="@+id/labelPetName"
-        android:layout_alignLeft="@+id/labelPetName"
-        android:layout_alignStart="@+id/labelPetName"
-        android:textStyle="normal|bold" />
-
-    <TextView
-        android:text="Specie:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/labelPetSpecie"
-        android:textSize="24sp"
-        android:layout_below="@+id/labelPetSex"
-        android:layout_alignLeft="@+id/labelPetSex"
-        android:layout_alignStart="@+id/labelPetSex"
-        android:textStyle="normal|bold" />
-
     <ImageView
         app:srcCompat="@android:drawable/ic_menu_gallery"
         android:id="@+id/imagePetImage"
-        android:layout_width="550px"
-        android:layout_height="550px"
         android:layout_below="@+id/textView3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="9dp" />
+        android:layout_marginTop="9dp"
+        android:layout_height="120dp"
+        android:layout_width="120dp"
+        android:layout_toLeftOf="@+id/labelPetSpecie"
+        android:layout_toStartOf="@+id/labelPetSpecie" />
 
     <TextView
         android:text="Pet Informations"
@@ -113,19 +93,6 @@
         android:textSize="30sp"
         android:textStyle="normal|bold"
         android:textAllCaps="false" />
-
-    <TextView
-        android:text="Name:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/labelPetName"
-        android:textSize="24sp"
-        android:layout_alignTop="@+id/imagePetImage"
-        android:layout_toRightOf="@+id/imagePetImage"
-        android:layout_toEndOf="@+id/imagePetImage"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:textStyle="normal|bold" />
 
     <TextView
         android:text="Owner Informations"
@@ -172,5 +139,38 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textStyle="normal|bold" />
+
+    <TextView
+        android:text="Sex:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelPetSex"
+        android:textSize="24sp"
+        android:textStyle="normal|bold"
+        android:layout_below="@+id/labelPetName"
+        android:layout_alignLeft="@+id/labelPetName"
+        android:layout_alignStart="@+id/labelPetName" />
+
+    <TextView
+        android:text="Specie:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelPetSpecie"
+        android:textSize="24sp"
+        android:textStyle="normal|bold"
+        android:layout_below="@+id/labelPetSex"
+        android:layout_alignLeft="@+id/labelPetSex"
+        android:layout_alignStart="@+id/labelPetSex" />
+
+    <TextView
+        android:text="Name:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelPetName"
+        android:textSize="24sp"
+        android:textStyle="normal|bold"
+        android:layout_alignTop="@+id/imagePetImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp" />
 
 </RelativeLayout>
