@@ -10,7 +10,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,7 +79,7 @@ public class PetDataActivity extends AppCompatActivity {
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
+                    public void onFailure(Exception exception) {
                         // Handle any errors
                     }
                 });
@@ -137,6 +136,7 @@ public class PetDataActivity extends AppCompatActivity {
                                 String name = (String) dataSnapshot.child("name").getValue();
                                 String email = (String) dataSnapshot.child("email").getValue();
                                 String phone = (String) dataSnapshot.child("phoneNumber").getValue();
+                                String requestID = (String) dataSnapshot.child("NotificationID").getValue();
 
                                 TextView textOwnerName = (TextView) findViewById(R.id.textOwnerName);
                                 textOwnerName.setText(name);
@@ -171,7 +171,29 @@ public class PetDataActivity extends AppCompatActivity {
                                 queue.add(stringRequest);
 
                                 // Envio de notificação por cURL
-                                // curl --header "Authorization: key=AIzaSyD56xONeA1zPaEojB0lVgg69cmTNgz6YjY" --header Content-Type:"application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification\": { \"title\": \"Portugal vs. Denmark\",\"body\": \"5 to 1\"},\"to\" : \"fPFbflxXlKs:APA91bFHeMtLgcJwnrcIwBJ5yFEBXiRtEuQSkknshIQ2M-wLiLgLf0t0T7AGlvONG1DD9swc_B4t7DFyTt0OCV0AnJ0LUDd5WmoLFL90o9UpiHfWud-_rEMeTJMmqT0IkCXDFuwqELNG\"}"
+                                // Instantiate the RequestQueue.
+                                String notificationUrl ="http://lasid.sor.ufscar.br/twittersearch/country/sendnotification.php?id=" + requestID + "&title=CadêMeuPet!&body=Dados%20de%20" + pet.getName() + "acabaram%20de%20ser%20acessados!";
+
+                                System.out.println("URL: " + notificationUrl);
+
+                                // Request a string response from the provided URL.
+                                StringRequest stringRequest2 = new StringRequest(Request.Method.GET, notificationUrl,
+                                        new Response.Listener<String>() {
+                                            @Override
+                                            public void onResponse(String response) {
+                                                // Display the first 500 characters of the response string.
+                                                System.out.println("Worked!");
+                                            }
+                                        }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        System.out.println("That didn't work!");
+                                    }
+                                });
+                                // Add the request to the RequestQueue.
+                                queue.add(stringRequest2);
+
+                                // curl --header "Authorization: key=AIzaSyD56xONeA1zPaEojB0lVgg69cmTNgz6YjY" --header Content-Type:"application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification\": { \"title\": \"Portugal vs. Denmark\",\"body\": \"5 to 1\", \"sound\": \"default\"},\"to\" : \"djVv1NK7LV0:APA91bH7OkmYuwf4B1xuF8rLLWaGEYWRyWZiCR3SfkOxQGyFAN94QsJ0fi__oCprv5mwWZ24rQfpjU_IBofDyRb0o9OXtfbPYER9km3cuND0-_hLwSghlbwzTINwj_kjF9NA5t_Vk9mU\"}"
                                 // https://firebase.google.com/docs/cloud-messaging/server
                             }
 
