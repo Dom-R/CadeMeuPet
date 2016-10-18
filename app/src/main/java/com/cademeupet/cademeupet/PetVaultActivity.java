@@ -210,7 +210,7 @@ public class PetVaultActivity extends AppCompatActivity {
 
                 // Instantiate the RequestQueue.
                 RequestQueue queue = Volley.newRequestQueue(currentClass);
-                String url ="http://lasid.sor.ufscar.br/twittersearch/country/qrcode.php?email=" + email + "&username=" + name + "&petName=" + petName + "&petToken=" + finalPetID;
+                String url ="http://lasid.sor.ufscar.br/twittersearch/country/qrcode.php?email=" + email + "&userName=" + name.replaceAll(" ", "%20") + "&petName=" + petName.replaceAll(" ", "%20") + "&petToken=" + finalPetID;
 
                 System.out.println("URL: " + url);
 
