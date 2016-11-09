@@ -1,5 +1,6 @@
 package com.cademeupet.cademeupet;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -40,11 +41,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final int QRCODE_RESULT = 3849;
     private GoogleApiClient mGoogleApiClient;
     private String userToken;
+    private ProgressDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Loading screen waiting on authenticating user
+        loadingDialog = new ProgressDialog(this);
+        loadingDialog.setMessage("Please wait while we try authenticating your account");
+        loadingDialog.setCancelable(false);
+        loadingDialog.setInverseBackgroundForced(false);
+        loadingDialog.show();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
@@ -61,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        int hideDialog = 0;
         // Loga usuario com Google automaticamente
         OptionalPendingResult<GoogleSignInResult> pendingResult =
                 Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
@@ -78,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         } else {
             Log.d(TAG, "Failed to auth user with Google!");
+            hideDialog += 1;
         }
 
         // Verificacao se o usuario esta autenticado pelo facebook
@@ -86,6 +97,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             createUserIfNotExist(Profile.getCurrentProfile().getId(), Profile.getCurrentProfile().getName(), "");
         } else {
             Log.d(TAG, "Not logged in by facebook!");
+            hideDialog += 1;
+        }
+
+        if(hideDialog == 2) {
+            loadingDialog.hide();
         }
     }
 
@@ -222,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                loadingDialog.hide();
                 if (snapshot.exists()) {
                     // TODO: handle the case where the data already exists
                     System.out.println("User Exist in db");
