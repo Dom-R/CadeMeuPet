@@ -11,115 +11,128 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.cademeupet.cademeupet.PetRegisterActivity">
 
-    <Button
-        android:text="Register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/register"
-        android:onClick="registerUser"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/mainbuttonshape"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:text="Pet Registration:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="70px"
-        android:id="@+id/textRegistration"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-
-    <RadioGroup
-        android:id="@+id/radioGroupSex"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@+id/inputPetName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <TextView
-            android:id="@+id/textPetSex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sex"
-            android:textSize="18sp"
-            android:textAllCaps="false"
-            android:fontFamily="sans-serif" />
-
-        <RadioButton android:id="@+id/maleSex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Male"/>
-        <RadioButton android:id="@+id/femaleSex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Female"/>
-
-    </RadioGroup>
-
-    <ImageButton
-        app:srcCompat="@android:drawable/ic_menu_gallery"
-        android:id="@+id/imageButton"
-        android:elevation="0dp"
-        android:layout_marginTop="19dp"
-        android:layout_below="@+id/textRegistration"
-        android:layout_centerHorizontal="true"
-        android:onClick="uploadPetImage"
-        android:layout_width="512px"
-        android:layout_height="512px" />
-
-    <TextView
-        android:text="Upload Pet Image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imagePet"
-        android:layout_below="@+id/imageButton"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:text="Pet name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textPetName"
-        android:layout_below="@+id/imagePet"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="18sp" />
-
-    <EditText
-        android:id="@+id/inputPetName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:layout_below="@+id/textPetName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="Specie"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textPetSpecie"
-        android:layout_below="@+id/radioGroupSex"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="18sp" />
-
-    <Spinner
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinnerSpecie"
-        android:entries="@array/array_species"
-        android:layout_below="@+id/textPetSpecie"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:text="Register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/register"
+                android:onClick="registerUser"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/mainbuttonshape"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:text="Pet Registration:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="70px"
+                android:id="@+id/textRegistration"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+
+            <RadioGroup
+                android:id="@+id/radioGroupSex"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@+id/inputPetName"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:id="@+id/textPetSex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sex"
+                    android:textSize="18sp"
+                    android:textAllCaps="false"
+                    android:fontFamily="sans-serif" />
+
+                <RadioButton android:id="@+id/maleSex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Male"/>
+                <RadioButton android:id="@+id/femaleSex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female"/>
+
+            </RadioGroup>
+
+            <ImageButton
+                app:srcCompat="@android:drawable/ic_menu_gallery"
+                android:id="@+id/imageButton"
+                android:elevation="0dp"
+                android:layout_marginTop="19dp"
+                android:layout_below="@+id/textRegistration"
+                android:layout_centerHorizontal="true"
+                android:onClick="uploadPetImage"
+                android:layout_width="512px"
+                android:layout_height="512px" />
+
+            <TextView
+                android:text="Upload Pet Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imagePet"
+                android:layout_below="@+id/imageButton"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:text="Pet name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textPetName"
+                android:layout_below="@+id/imagePet"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/inputPetName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:layout_below="@+id/textPetName"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:text="Specie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textPetSpecie"
+                android:layout_below="@+id/radioGroupSex"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerSpecie"
+                android:entries="@array/array_species"
+                android:layout_below="@+id/textPetSpecie"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
