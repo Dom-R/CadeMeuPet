@@ -3,15 +3,12 @@ package com.cademeupet.cademeupet;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -151,7 +148,12 @@ public class PetVaultActivity extends AppCompatActivity {
 
         mDatabase.child("pets").child(petID).setValue(pet);
 
-        mDatabase.child("users").child(userToken).child("pets").child(petID).setValue(pet);
+        //mDatabase.child("users").child(userToken).child("pets").child(petID).setValue(pet);
+
+        // Upload de imagem
+        if(file != null) {
+            uploadImagem(file, petID);
+        }
 
         System.out.println("Pet inserted!");
     }
@@ -162,34 +164,19 @@ public class PetVaultActivity extends AppCompatActivity {
 
         final PetInfo pet = new PetInfo(userToken, petName, petSex, petSpecie);
 
+        // Gera cod unico do animal
         SecureRandom random = new SecureRandom();
-
         String petID = new BigInteger(130, random).toString(32);
-
         petID = petID.substring(0, Math.min(petID.length(), 6)).toUpperCase();
 
+        // Insere pet no firebase
         mDatabase.child("pets").child(petID).setValue(pet);
 
         //mDatabase.child("users").child(userToken).child("pets").child(petID).setValue(pet);
 
+        // Upload de imagem
         if(file != null) {
-            StorageReference riversRef = storageRef.child("images/" + petID);
-            uploadTask = riversRef.putFile(file);
-
-            // Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(Exception exception) {
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    System.out.println(downloadUrl);
-                }
-            });
+            uploadImagem(file, petID);
         }
 
         final PetVaultActivity currentClass = this;
@@ -229,7 +216,7 @@ public class PetVaultActivity extends AppCompatActivity {
                     }
                 });
                 // Add the request to the RequestQueue.
-                queue.add(stringRequest); // TODO: REMOVER QUANDO FOR TESTAR ENVIO DE EMAIL
+                queue.add(stringRequest);
             }
 
             @Override
@@ -240,6 +227,28 @@ public class PetVaultActivity extends AppCompatActivity {
 
         System.out.println("Pet inserted!");
 
+    }
+
+    public void uploadImagem(Uri file, String petID) {
+        if(file != null) {
+            StorageReference riversRef = storageRef.child("images/" + petID);
+            uploadTask = riversRef.putFile(file);
+
+            // Register observers to listen for when the download is done or if it fails
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    System.out.println(downloadUrl);
+                }
+            });
+        }
     }
 
             /*
