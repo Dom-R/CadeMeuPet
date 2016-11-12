@@ -1,8 +1,11 @@
 package com.cademeupet.cademeupet;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +30,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
@@ -230,25 +237,39 @@ public class PetVaultActivity extends AppCompatActivity {
     }
 
     public void uploadImagem(Uri file, String petID) {
-        if(file != null) {
-            StorageReference riversRef = storageRef.child("images/" + petID);
-            uploadTask = riversRef.putFile(file);
-
-            // Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(Exception exception) {
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    System.out.println(downloadUrl);
-                }
-            });
+        //BitmapFactory.Options options = new BitmapFactory.Options();
+        //options.inSampleSize = 1;
+        //Bitmap bitmap = BitmapFactory.decodeFile(file.toString(), options);
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), file);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 512, 512, false);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        StorageReference riversRef = storageRef.child("images/" + petID);
+        uploadTask = riversRef.putBytes(data);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                System.out.println(downloadUrl);
+            }
+        });
     }
 
             /*
