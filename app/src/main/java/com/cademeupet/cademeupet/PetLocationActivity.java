@@ -3,6 +3,7 @@ package com.cademeupet.cademeupet;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,12 +11,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
 public class PetLocationActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private Double latitude;
-    private Double longitude;
+    private String latitude;
+    private String longitude;
+    private String TAG = "PetLocationActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +27,9 @@ public class PetLocationActivity extends FragmentActivity implements OnMapReadyC
         setContentView(R.layout.activity_pet_location);
 
         Intent intent = getIntent();
-        latitude = intent.getDoubleExtra("LAT", 0);
-        longitude = intent.getDoubleExtra("LONG", 0);
+        latitude = intent.getStringExtra("LAT");
+        longitude = intent.getStringExtra("LONG");
+        System.out.println("Latitude: " + latitude + " - Longitude: " + longitude);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -47,8 +52,8 @@ public class PetLocationActivity extends FragmentActivity implements OnMapReadyC
         mMap = googleMap;
 
         // Add a marker in on the pet location
-        LatLng petLocation = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(petLocation).title("Pet was checked on this place at XXhrs and XXminutes"));
+        LatLng petLocation = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        mMap.addMarker(new MarkerOptions().position(petLocation).title("Pet data was acessed on this location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(petLocation));
     }
 }

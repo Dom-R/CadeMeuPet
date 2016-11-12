@@ -198,8 +198,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void databaseTest(View view) {
         Intent intent = new Intent(this, PetLocationActivity.class);
-        intent.putExtra("LAT", -23.569574);
-        intent.putExtra("LONG", -46.730172);
+        intent.putExtra("LAT", "-23.569574");
+        intent.putExtra("LONG", "-46.730172");
         startActivity(intent);
 
         //createUserIfNotExist("123", "ABC", "a@a.com");

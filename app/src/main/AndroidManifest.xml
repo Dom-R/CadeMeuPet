@@ -49,7 +49,12 @@
 
         <activity
             android:name=".PetLocationActivity"
-            android:label="@string/title_activity_pet_location"></activity>
+            android:label="@string/title_activity_pet_location">
+            <intent-filter>
+                <action android:name="OPEN_MAP_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

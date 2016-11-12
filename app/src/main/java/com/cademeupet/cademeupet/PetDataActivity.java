@@ -149,7 +149,7 @@ public class PetDataActivity extends AppCompatActivity {
 
                                 // Instantiate the RequestQueue.
                                 RequestQueue queue = Volley.newRequestQueue(currentClass);
-                                String url ="http://lasid.sor.ufscar.br/twittersearch/country/registration.php?email=" + email + "&petName=" + pet.getName().replaceAll(" ", "%20") + "&location=" + pet.getLastLocation() + "&userName=" + name.replaceAll(" ", "%20");
+                                String url ="http://lasid.sor.ufscar.br/twittersearch/country/found.php?email=" + email + "&petName=" + pet.getName().replaceAll(" ", "%20") + "&location=" + pet.getLastLocation() + "&userName=" + name.replaceAll(" ", "%20");
 
                                 System.out.println("URL: " + url);
 
@@ -172,7 +172,7 @@ public class PetDataActivity extends AppCompatActivity {
 
                                 // Envio de notificação por cURL
                                 // Instantiate the RequestQueue.
-                                String notificationUrl ="http://lasid.sor.ufscar.br/twittersearch/country/sendnotification.php?id=" + requestID + "&title=CadeMeuPet!&body=Dados%20de%20" + pet.getName().replaceAll(" ", "%20") + "%20acabaram%20de%20ser%20acessados!";
+                                String notificationUrl ="http://lasid.sor.ufscar.br/twittersearch/country/sendnotification.php?id=" + requestID + "&title=CadeMeuPet!&body=Dados%20de%20" + pet.getName().replaceAll(" ", "%20") + "%20acabaram%20de%20ser%20acessados!&latitude=" + pet.getLastLocation().split(",")[0] + "&longitude=" + pet.getLastLocation().split(",")[1];
 
                                 System.out.println("URL: " + notificationUrl);
 
