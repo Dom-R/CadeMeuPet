@@ -7,4 +7,5 @@
         <item>Cat</item>
         <item>Dog</item>
     </string-array>
+    <string name="title_activity_pet_location">Map</string>
 </resources>
