@@ -33,6 +33,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.loopj.android.http.*;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -197,45 +200,30 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void databaseTest(View view) {
-        Intent intent = new Intent(this, PetLocationActivity.class);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://lasid.sor.ufscar.br/twittersearch/country/sendnotification.php?id=" + FirebaseInstanceId.getInstance().getToken() + "&title=CadeMeuPet!&body=Dados%20de%20Ahri%20foram%20acessados!", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                // called when response HTTP status is "200 OK"
+                System.out.println("Success");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                System.out.println("Failure");
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
+
+        /*Intent intent = new Intent(this, PetLocationActivity.class);
         intent.putExtra("LAT", "-23.569574");
         intent.putExtra("LONG", "-46.730172");
-        startActivity(intent);
-
-        //createUserIfNotExist("123", "ABC", "a@a.com");
-        //createUserIfNotExist("321");
-        //createUserIfNotExist("432");
-
-        // Send Notification
-        /*
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setSmallIcon(R.drawable.com_facebook_button_icon);
-        mBuilder.setContentTitle("Cadê Meu Pet");
-        mBuilder.setContentText("Alguém acessou os dados do seu animal de estimação! Clique aqui para ver onde foi!");
-
-        Intent resultIntent = new Intent(this, PetDataActivity.class);
-        resultIntent.putExtra("PET_DATA", "123");
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
-
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // notificationID allows you to update the notification later on.
-        mNotificationManager.notify(123, mBuilder.build());
-        // End send notification
-        */
-
-        //DESCOMENTAR PARA FAZER TESTE
-//        Intent intent = new Intent(this, PetVaultActivity.class);
-//        userToken = "1431781136836494";
-//        intent.putExtra("USER_TOKEN", "" + userToken);
-//        startActivity(intent);
-        //DESCOMENTAR PARA FAZER TESTE
+        startActivity(intent);*/
     }
 
     public void createUserIfNotExist(final String token, final String name, final String email) {

@@ -29,6 +29,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -36,6 +38,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+
+import cz.msebera.android.httpclient.Header;
 
 public class PetVaultActivity extends AppCompatActivity {
 
@@ -203,27 +207,30 @@ public class PetVaultActivity extends AppCompatActivity {
                 String email = (String) dataSnapshot.child("email").getValue();
 
                 // Instantiate the RequestQueue.
-                RequestQueue queue = Volley.newRequestQueue(currentClass);
                 String url ="http://lasid.sor.ufscar.br/twittersearch/country/qrcode.php?email=" + email + "&userName=" + name.replaceAll(" ", "%20") + "&petName=" + petName.replaceAll(" ", "%20") + "&petToken=" + finalPetID;
 
                 System.out.println("URL: " + url);
 
-                // Request a string response from the provided URL.
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                // Display the first 500 characters of the response string.
-                                System.out.println("Worked!");
-                            }
-                        }, new Response.ErrorListener() {
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.get(url, new AsyncHttpResponseHandler() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        System.out.println("That didn't work!");
+                    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                        // called when response HTTP status is "200 OK"
+                        System.out.println("[Registration Notification] Success");
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        System.out.println("[Registration Notification] Failure");
+                    }
+
+                    @Override
+                    public void onRetry(int retryNo) {
+                        // called when request is retried
+                        System.out.println("[Registration Notification] Retrying");
                     }
                 });
-                // Add the request to the RequestQueue.
-                queue.add(stringRequest);
             }
 
             @Override
