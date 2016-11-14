@@ -2,6 +2,7 @@ package com.cademeupet.cademeupet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,16 +15,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +27,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import cz.msebera.android.httpclient.Header;
 
 public class PetDataActivity extends AppCompatActivity {
 
@@ -48,22 +46,28 @@ public class PetDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_data);
 
+        final SharedPreferences prefs = this.getPreferences(MODE_PRIVATE);
+
         Intent intent = getIntent();
         final String petID = intent.getStringExtra("PET_DATA");
 
         // Create a storage reference from our app
         storageRef = FirebaseStorage.getInstance().getReference();
 
+        // Create database reference from app
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        // Recover pet data from database
         DatabaseReference ref = database.getReference("pets/" + petID);
         // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //String name = (String) dataSnapshot.getValue();
-                //System.out.println(name);
-                PetInfo pet = dataSnapshot.getValue(PetInfo.class);
-                System.out.println(pet.getName());
+                final PetInfo pet = dataSnapshot.getValue(PetInfo.class);
+                System.out.println("Pet Name: " + pet.getName());
+
+                // Save pet name for notification sending
+                prefs.edit().putString("petName", pet.getName()).commit();
 
                 // Recover Image
                 StorageReference petImage = storageRef.child("images/" + petID);
@@ -84,6 +88,7 @@ public class PetDataActivity extends AppCompatActivity {
                     }
                 });
 
+                // Set pet display data
                 TextView textPetName = (TextView) findViewById(R.id.textPetName);
                 textPetName.setText(pet.getName());
 
@@ -92,6 +97,39 @@ public class PetDataActivity extends AppCompatActivity {
 
                 TextView textPetSpecie = (TextView) findViewById(R.id.textPetSpecie);
                 textPetSpecie.setText(pet.getSpecie());
+
+                // Recupera dados do dono para enviar email e notificacao
+                DatabaseReference ref = database.getReference("users/" + pet.getUserID());
+
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String name = (String) dataSnapshot.child("name").getValue();
+                        String email = (String) dataSnapshot.child("email").getValue();
+                        String phone = (String) dataSnapshot.child("phoneNumber").getValue();
+                        String notificationID = (String) dataSnapshot.child("NotificationID").getValue();
+
+                        // Set owner display data
+                        TextView textOwnerName = (TextView) findViewById(R.id.textOwnerName);
+                        textOwnerName.setText(name);
+
+                        TextView textOwnerEmail = (TextView) findViewById(R.id.textOwnerEmail);
+                        textOwnerEmail.setText(email);
+
+                        TextView textOwnerPhone = (TextView) findViewById(R.id.textOwnerPhone);
+                        textOwnerPhone.setText(phone);
+
+                        // Save data on SharedPreferences
+                        prefs.edit().putString("ownerName", name).commit();
+                        prefs.edit().putString("ownerEmail", email).commit();
+                        prefs.edit().putString("ownerNotificationID", notificationID).commit();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.out.println("The read failed: " + databaseError.getCode());
+                    }
+                });
             }
 
             @Override
@@ -100,8 +138,9 @@ public class PetDataActivity extends AppCompatActivity {
             }
         });
 
-        final PetDataActivity currentClass = this;
-
+        /* *************** */
+        /* LOCATION MODULE */
+        /* *************** */
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
@@ -109,111 +148,66 @@ public class PetDataActivity extends AppCompatActivity {
                 System.out.println("GPS Latitude: " + String.valueOf(location.getLatitude()));
                 System.out.println("GPS Longitude: " + String.valueOf(location.getLongitude()));
 
-                // Insere no Banco de Dados o acesso ao ID de um cachorro
-                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference ref = database.getReference("pets/" + petID);
+                // Atualiza a localizacao do ultimo acesso aos dados do animal
+                DatabaseReference ref = database.getReference("pets/" + petID + "/lastLocation");
+                ref.setValue(location.getLatitude() + "," + location.getLongitude());
 
-                ref.addValueEventListener(new ValueEventListener() {
+                /* ****************** */
+                /* Send Notifications */
+                /* ****************** */
+                // Generate url with parameters
+                String url ="http://lasid.sor.ufscar.br/twittersearch/country/found.php?email=" + prefs.getString("ownerEmail", "dominik.reller@gmail.com") + "&petName=" + prefs.getString("petName", "Unknown Pet Name").replaceAll(" ", "%20") + "&location=" + location.getLatitude() + "," + location.getLongitude() + "&userName=" + prefs.getString("ownerName", "Unknown Name").replaceAll(" ", "%20");
+
+                System.out.println("[Email Notification] URL: " + url);
+
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.get(url, new AsyncHttpResponseHandler() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //String name = (String) dataSnapshot.getValue();
-                        //System.out.println(name);
-
-                        final PetInfo pet = dataSnapshot.getValue(PetInfo.class);
-
-                        String userID = pet.getUserID();
-
-                        // Recupera dados do dono para enviar email
-                        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        DatabaseReference ref = database.getReference("users/" + userID);
-
-                        ref.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                //String name = (String) dataSnapshot.getValue();
-                                //System.out.println(name);
-
-                                String name = (String) dataSnapshot.child("name").getValue();
-                                String email = (String) dataSnapshot.child("email").getValue();
-                                String phone = (String) dataSnapshot.child("phoneNumber").getValue();
-                                String requestID = (String) dataSnapshot.child("NotificationID").getValue();
-
-                                TextView textOwnerName = (TextView) findViewById(R.id.textOwnerName);
-                                textOwnerName.setText(name);
-
-                                TextView textOwnerEmail = (TextView) findViewById(R.id.textOwnerEmail);
-                                textOwnerEmail.setText(email);
-
-                                TextView textOwnerPhone = (TextView) findViewById(R.id.textOwnerPhone);
-                                textOwnerPhone.setText(phone);
-
-                                // Instantiate the RequestQueue.
-                                RequestQueue queue = Volley.newRequestQueue(currentClass);
-                                String url ="http://lasid.sor.ufscar.br/twittersearch/country/found.php?email=" + email + "&petName=" + pet.getName().replaceAll(" ", "%20") + "&location=" + pet.getLastLocation() + "&userName=" + name.replaceAll(" ", "%20");
-
-                                System.out.println("URL: " + url);
-
-                                // Request a string response from the provided URL.
-                                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                                        new Response.Listener<String>() {
-                                            @Override
-                                            public void onResponse(String response) {
-                                                // Display the first 500 characters of the response string.
-                                                System.out.println("Worked!");
-                                            }
-                                        }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        System.out.println("That didn't work!");
-                                    }
-                                });
-                                // Add the request to the RequestQueue.
-                                queue.add(stringRequest);
-
-                                // Envio de notificação por cURL
-                                // Instantiate the RequestQueue.
-                                String notificationUrl ="http://lasid.sor.ufscar.br/twittersearch/country/sendnotification.php?id=" + requestID + "&title=CadeMeuPet!&body=Dados%20de%20" + pet.getName().replaceAll(" ", "%20") + "%20acabaram%20de%20ser%20acessados!&latitude=" + pet.getLastLocation().split(",")[0] + "&longitude=" + pet.getLastLocation().split(",")[1];
-
-                                System.out.println("URL: " + notificationUrl);
-
-                                // Request a string response from the provided URL.
-                                StringRequest stringRequest2 = new StringRequest(Request.Method.GET, notificationUrl,
-                                        new Response.Listener<String>() {
-                                            @Override
-                                            public void onResponse(String response) {
-                                                // Display the first 500 characters of the response string.
-                                                System.out.println("Worked!");
-                                            }
-                                        }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        System.out.println("That didn't work!");
-                                    }
-                                });
-                                // Add the request to the RequestQueue.
-                                queue.add(stringRequest2);
-
-                                // curl --header "Authorization: key=AIzaSyD56xONeA1zPaEojB0lVgg69cmTNgz6YjY" --header Content-Type:"application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification\": { \"title\": \"Portugal vs. Denmark\",\"body\": \"5 to 1\", \"sound\": \"default\"},\"to\" : \"djVv1NK7LV0:APA91bH7OkmYuwf4B1xuF8rLLWaGEYWRyWZiCR3SfkOxQGyFAN94QsJ0fi__oCprv5mwWZ24rQfpjU_IBofDyRb0o9OXtfbPYER9km3cuND0-_hLwSghlbwzTINwj_kjF9NA5t_Vk9mU\"}"
-                                // https://firebase.google.com/docs/cloud-messaging/server
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                System.out.println("The read failed: " + databaseError.getCode());
-                            }
-                        });
-
-                        pet.setLastLocation(location.getLatitude() + "," + location.getLongitude());
-
-                        DatabaseReference reference = database.getReference("pets/" + petID);
-                        reference.setValue(pet);
+                    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                        // called when response HTTP status is "200 OK"
+                        System.out.println("[Email Notification] Success");
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("The read failed: " + databaseError.getCode());
+                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        System.out.println("[Email Notification] Failure");
+                    }
+
+                    @Override
+                    public void onRetry(int retryNo) {
+                        // called when request is retried
+                        System.out.println("[Email Notification] Retrying");
                     }
                 });
+
+                // Envio de notificação para o celular
+                String notificationUrl ="http://lasid.sor.ufscar.br/twittersearch/country/sendnotification.php?id=" + prefs.getString("ownerNotificationID", "MISSING") + "&title=CadeMeuPet!&body=Dados%20de%20" + prefs.getString("petName", "Unknown Pet Name").replaceAll(" ", "%20") + "%20acabaram%20de%20ser%20acessados!&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude();
+
+                System.out.println("[Phone Notification] URL: " + notificationUrl);
+                client.get(url, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                        // called when response HTTP status is "200 OK"
+                        System.out.println("[Phone Notification] Success");
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        System.out.println("[Phone Notification] Failure");
+                    }
+
+                    @Override
+                    public void onRetry(int retryNo) {
+                        // called when request is retried
+                        System.out.println("[Phone Notification] Retrying");
+                    }
+                });
+                /* ********************** */
+                /* END Send Notifications */
+                /* ********************** */
+
             }
 
             @Override
@@ -265,7 +259,9 @@ public class PetDataActivity extends AppCompatActivity {
             return;
         }
         locationManager.requestSingleUpdate(criteria, locationListener, looper);
-        //System.out.println(location.get("longitude") + " " + location.get("latitude"));
+        /* ******************* */
+        /* END LOCATION MODULE */
+        /* ******************* */
     }
 
     @Override

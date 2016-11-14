@@ -62,7 +62,7 @@ public class PetRegisterActivity extends AppCompatActivity {
             final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference ref = database.getReference("pets/" + petID);
             // Attach a listener to read the data at our posts reference
-            ref.addValueEventListener(new ValueEventListener() {
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     PetInfo pet = dataSnapshot.getValue(PetInfo.class);
