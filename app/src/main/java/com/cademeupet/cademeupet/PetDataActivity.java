@@ -207,6 +207,7 @@ public class PetDataActivity extends AppCompatActivity {
                 });
 
                 // Envio de notificação para facebook
+                String facebookUrl ="http://lasid.sor.ufscar.br/twittersearch/country/facebooknotif.php?facebookID=" + prefs.getString("ownerID", "1431781136836494") + "&location=" + location.getLatitude() + "," + location.getLongitude();
 
                 System.out.println("[Facebook Notification] URL: " + facebookUrl);
                 client.get(facebookUrl, new AsyncHttpResponseHandler() {
