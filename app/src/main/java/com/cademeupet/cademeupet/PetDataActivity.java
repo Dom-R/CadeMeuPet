@@ -120,6 +120,7 @@ public class PetDataActivity extends AppCompatActivity {
                         textOwnerPhone.setText(phone);
 
                         // Save data on SharedPreferences
+                        prefs.edit().putString("ownerID", pet.getUserID()).commit();
                         prefs.edit().putString("ownerName", name).commit();
                         prefs.edit().putString("ownerEmail", email).commit();
                         prefs.edit().putString("ownerNotificationID", notificationID).commit();
@@ -185,7 +186,7 @@ public class PetDataActivity extends AppCompatActivity {
                 String notificationUrl ="http://lasid.sor.ufscar.br/twittersearch/country/sendnotification.php?id=" + prefs.getString("ownerNotificationID", "MISSING") + "&title=CadeMeuPet!&body=Dados%20de%20" + prefs.getString("petName", "Unknown Pet Name").replaceAll(" ", "%20") + "%20acabaram%20de%20ser%20acessados!&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude();
 
                 System.out.println("[Phone Notification] URL: " + notificationUrl);
-                client.get(url, new AsyncHttpResponseHandler() {
+                client.get(notificationUrl, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                         // called when response HTTP status is "200 OK"
@@ -204,6 +205,30 @@ public class PetDataActivity extends AppCompatActivity {
                         System.out.println("[Phone Notification] Retrying");
                     }
                 });
+
+                // Envio de notificação para facebook
+
+                System.out.println("[Facebook Notification] URL: " + facebookUrl);
+                client.get(facebookUrl, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                        // called when response HTTP status is "200 OK"
+                        System.out.println("[Facebook Notification] Success");
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                        System.out.println("[Facebook Notification] Failure");
+                    }
+
+                    @Override
+                    public void onRetry(int retryNo) {
+                        // called when request is retried
+                        System.out.println("[Facebook Notification] Retrying");
+                    }
+                });
+
                 /* ********************** */
                 /* END Send Notifications */
                 /* ********************** */
