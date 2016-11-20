@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -166,6 +167,14 @@ public class PetVaultActivity extends AppCompatActivity {
             uploadImagem(file, petID);
         }
 
+        new AlertDialog.Builder(this)
+                .setTitle("Update Completed!")
+                .setMessage( petName + " data has been updated successfully!")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setCancelable(false)
+                .setNegativeButton("OK", null)
+                .show();
+
         System.out.println("Pet inserted!");
     }
 
@@ -239,8 +248,15 @@ public class PetVaultActivity extends AppCompatActivity {
             }
         });
 
-        System.out.println("Pet inserted!");
+        new AlertDialog.Builder(this)
+                .setTitle("Registration Completed!")
+                .setMessage( petName + " has been registered successfully! An email with extra information has been sent to you!")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setCancelable(false)
+                .setNegativeButton("OK", null)
+                .show();
 
+        System.out.println("Pet inserted!");
     }
 
     public void uploadImagem(Uri file, String petID) {
