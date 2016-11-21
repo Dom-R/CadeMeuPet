@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Loading screen waiting on authenticating user
         loadingDialog = new ProgressDialog(this);
         loadingDialog.setMessage("Aguarde enquanto tentamos autenticar sua conta.");
         loadingDialog.setCancelable(false);
@@ -92,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         } else {
             Log.d(TAG, "Falha ao autenticar conta Google!");
             hideDialog += 1;
+
+            if(hideDialog == 2) {
+                loadingDialog.hide();
+            }
         }
 
         // Verificacao se o usuario esta autenticado pelo facebook
@@ -101,10 +104,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         } else {
             Log.d(TAG, "Usuário não logado com Facebook!");
             hideDialog += 1;
-        }
 
-        if(hideDialog == 2) {
-            loadingDialog.hide();
+            if(hideDialog == 2) {
+                loadingDialog.hide();
+            }
         }
     }
 
@@ -311,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, LOGIN_RESULT);
 
-        loadingDialog.show();
+        //loadingDialog.show();
     }
 
     public void openPetsVault() {
