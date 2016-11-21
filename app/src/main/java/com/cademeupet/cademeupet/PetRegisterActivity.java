@@ -82,6 +82,7 @@ public class PetRegisterActivity extends AppCompatActivity {
         Intent intent = getIntent();
         petID = intent.getStringExtra("PET_ID");
         if(petID != null) {
+            hasPayed = true;
             TextView button = (TextView) findViewById(R.id.register);
             button.setText("Atualizar");
 
