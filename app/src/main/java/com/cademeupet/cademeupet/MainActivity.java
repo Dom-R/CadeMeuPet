@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         // Loading screen waiting on authenticating user
         loadingDialog = new ProgressDialog(this);
-        loadingDialog.setMessage("Please wait while we try authenticating your account");
+        loadingDialog.setMessage("Aguarde enquanto tentamos autenticar sua conta.");
         loadingDialog.setCancelable(false);
         loadingDialog.setInverseBackgroundForced(false);
         loadingDialog.show();
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (pendingResult.isDone()) {
             // There's immediate result available.
             GoogleSignInResult result = pendingResult.get();
-            Log.d(TAG, "Google Login result: " + result.isSuccess());
+            Log.d(TAG, "Resultado do login Google: " + result.isSuccess());
             if(result.isSuccess()) {
                 GoogleSignInAccount acct = result.getSignInAccount();
                 //String email = acct.getEmail();
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 createUserIfNotExist(acct.getId(), acct.getDisplayName(), acct.getEmail());
             }
         } else {
-            Log.d(TAG, "Failed to auth user with Google!");
+            Log.d(TAG, "Falha ao autenticar conta Google!");
             hideDialog += 1;
         }
 
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (isFacebookLoggedIn()) {
             createUserIfNotExist(Profile.getCurrentProfile().getId(), Profile.getCurrentProfile().getName(), "");
         } else {
-            Log.d(TAG, "Not logged in by facebook!");
+            Log.d(TAG, "Usuário não logado com Facebook!");
             hideDialog += 1;
         }
 
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void insertCode(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Insert a code");
+        builder.setTitle("Insira um código");
 
         // Set up the input
         final EditText input = new EditText(this);
@@ -137,15 +137,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         builder.setView(input);
 
         // Set up the buttons
-        builder.setPositiveButton("Go", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Ir", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String m_Text = input.getText().toString();
-                Log.d(TAG, "Inserted Text: " + m_Text);
+                Log.d(TAG, "Texto inserido: " + m_Text);
                 showPetActivity(m_Text);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
            }
         );
         TextView tv = (TextView) findViewById(R.id.buttonLoginORProfile);
-        tv.setText("Profile");
+        tv.setText("Perfil");
     }
 
     public void databaseTest(View view) {
@@ -205,13 +205,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 // called when response HTTP status is "200 OK"
-                System.out.println("Success");
+                System.out.println("Sucesso");
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                System.out.println("Failure");
+                System.out.println("Falha");
             }
 
             @Override
@@ -293,11 +293,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     System.out.println("Pet does not exist in db");
 
                     new AlertDialog.Builder(currentClass)
-                            .setTitle("Invalid code!")
-                            .setMessage("The inserted code is invalid! Please try again!")
+                            .setTitle("Código inválido!")
+                            .setMessage("Código inválido! Por favor tente novamente!")
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setCancelable(false)
-                            .setNegativeButton("Exit", null)
+                            .setNegativeButton("Sair", null)
                             .show();
                 }
             }

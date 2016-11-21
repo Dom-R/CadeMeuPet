@@ -47,12 +47,12 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerUser(View view) {
         if(inputFullname.getText().toString().trim().equals("")) {
-            inputFullname.setError("Full name is required");
+            inputFullname.setError("Por favor insira o nome completo");
         } else if (!isValidEmail(inputEmail.getText().toString())) {
-            inputEmail.setError("Invalid Email");
+            inputEmail.setError("Email inválido");
         } else if (inputNumber.getText().toString().trim().equals("") || !android.util.Patterns.PHONE.matcher(inputNumber.getText().toString().trim()).matches() || !Pattern.matches("^[+][5]{2}[ ][0-9]{2}[ ][0-9]{4,5}[-][0-9]{4}$", inputNumber.getText().toString().trim())) {
             System.out.println(inputNumber.getText());
-            inputNumber.setError("Phone number is required in the following style: +55 CityCode TelephoneNumber");
+            inputNumber.setError("Número de telefone obrigatório no seguinte formato: +55 DDD número");
         } else {
             UserInfo user = new UserInfo(inputFullname.getText().toString(), inputEmail.getText().toString(), inputNumber.getText().toString());
 

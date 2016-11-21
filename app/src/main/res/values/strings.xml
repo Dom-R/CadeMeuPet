@@ -4,8 +4,8 @@
     <string name="facebook_app_id">1217099188350148</string>
     <string name="title_activity_pets_vault">PetsVaultActivity</string>
     <string-array name="array_species">
-        <item>Cat</item>
-        <item>Dog</item>
+        <item>Gato</item>
+        <item>Cachorro</item>
     </string-array>
     <string name="title_activity_pet_location">Map</string>
 </resources>

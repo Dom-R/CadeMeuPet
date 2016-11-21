@@ -53,7 +53,7 @@ public class PetLocationActivity extends FragmentActivity implements OnMapReadyC
 
         // Add a marker in on the pet location
         LatLng petLocation = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-        mMap.addMarker(new MarkerOptions().position(petLocation).title("Pet data was acessed on this location"));
+        mMap.addMarker(new MarkerOptions().position(petLocation).title("Os dados do Pet foram acessados nessa localização"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(petLocation));
     }
 }

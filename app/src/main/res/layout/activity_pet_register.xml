@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:text="Register"
+                android:text="Registrar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -35,7 +35,7 @@
                 android:layout_alignParentEnd="true" />
 
             <TextView
-                android:text="Pet Registration:"
+                android:text="Registre Seu Pet:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="70px"
@@ -58,7 +58,7 @@
                     android:id="@+id/textPetSex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sex"
+                    android:text="Sexo"
                     android:textSize="18sp"
                     android:textAllCaps="false"
                     android:fontFamily="sans-serif" />
@@ -66,11 +66,11 @@
                 <RadioButton android:id="@+id/maleSex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Male"/>
+                    android:text="Macho"/>
                 <RadioButton android:id="@+id/femaleSex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Female"/>
+                    android:text="Fêmea"/>
 
             </RadioGroup>
 
@@ -86,7 +86,7 @@
                 android:layout_height="512px" />
 
             <TextView
-                android:text="Upload Pet Image"
+                android:text="Insira uma foto do pet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imagePet"
@@ -94,7 +94,7 @@
                 android:layout_centerHorizontal="true" />
 
             <TextView
-                android:text="Pet name"
+                android:text="Nome do pet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textPetName"
@@ -113,7 +113,7 @@
                 android:layout_alignParentStart="true" />
 
             <TextView
-                android:text="Specie"
+                android:text="Espécie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textPetSpecie"

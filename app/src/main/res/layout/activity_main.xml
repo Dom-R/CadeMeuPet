@@ -13,7 +13,7 @@
 
     <Button
         android:id="@+id/buttonLoginORProfile"
-        android:text="Login"
+        android:text="Entrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -34,7 +34,7 @@
         android:visibility="gone" />     <!--MUDAR PARA "visible" PARA FAZER TESTE-->
 
     <Button
-        android:text="Insert code"
+        android:text="Inserir Código"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonInsertCode"
@@ -49,7 +49,7 @@
         android:background="@drawable/mainbuttonshape" />
 
     <Button
-        android:text="Read QRCode"
+        android:text="Ler QRCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonQRCode"

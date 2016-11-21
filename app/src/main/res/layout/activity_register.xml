@@ -11,16 +11,21 @@
     tools:context="com.cademeupet.cademeupet.RegisterActivity">
 
     <Button
-        android:text="Register"
+        android:text="Cadastrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:id="@+id/register"
-        android:onClick="registerUser" />
+        android:onClick="registerUser"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/mainbuttonshape"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
-        android:text="Registration:"
+        android:text="Faça seu cadastro:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="70px"
@@ -33,7 +38,7 @@
         android:id="@+id/inputFullname"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Full name"
+        android:hint="Nome completo"
         android:inputType="text"
         android:layout_below="@+id/textRegistration"
         android:layout_alignParentLeft="true"
@@ -53,7 +58,7 @@
         android:id="@+id/inputNumber"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Phone Number"
+        android:hint="Telefone"
         android:inputType="phone"
         android:layout_below="@+id/inputEmail"
         android:layout_alignParentLeft="true"

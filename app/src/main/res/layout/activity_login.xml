@@ -12,7 +12,7 @@
     tools:context="com.cademeupet.cademeupet.LoginActivity">
 
     <TextView
-        android:text="Choose how you want to login:"
+        android:text="Escolha como quer acessar:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
@@ -25,7 +25,7 @@
         android:textAlignment="center" />
 
     <TextView
-        android:text="Or"
+        android:text="Ou"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"

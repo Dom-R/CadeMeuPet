@@ -83,7 +83,7 @@ public class PetRegisterActivity extends AppCompatActivity {
         petID = intent.getStringExtra("PET_ID");
         if(petID != null) {
             TextView button = (TextView) findViewById(R.id.register);
-            button.setText("Update");
+            button.setText("Atualizar");
 
             final PetRegisterActivity currentClass = this;
 
@@ -102,7 +102,7 @@ public class PetRegisterActivity extends AppCompatActivity {
 
                     // Setting pet sex
                     RadioButton radioButton;
-                    if(pet.getSex().equals("Male"))
+                    if(pet.getSex().equals("Macho"))
                         radioButton = (RadioButton) findViewById(R.id.maleSex);
                     else
                         radioButton = (RadioButton) findViewById(R.id.femaleSex);
@@ -154,14 +154,14 @@ public class PetRegisterActivity extends AppCompatActivity {
 
     public void registerUser(View view) {
         if (inputPetName.getText().toString().trim().equals("")) {
-            inputPetName.setError("Full name is required");
+            inputPetName.setError("Por favor insira o nome completo");
         } else if (inputPetSex.getCheckedRadioButtonId() == -1) {
             TextView temp = (TextView) findViewById(R.id.textPetSex);
-            temp.setError("Please select a option");
+            temp.setError("Por favor selecione uma opção");
         } else if(hasPayed == false) {
             new AlertDialog.Builder(this)
-                    .setTitle("Pet Registration!")
-                    .setMessage("You have to pay to be able to register your pet!")
+                    .setTitle("Registro de Animal de Estimação!")
+                    .setMessage("Você precisa pagar a taxa única para poder registrar seu animal de estimação!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setCancelable(false)
                     .setNegativeButton("OK", null)
@@ -190,7 +190,7 @@ public class PetRegisterActivity extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         // Always show the chooser (if there are multiple options available)
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_RESULT);
+        startActivityForResult(Intent.createChooser(intent, "Selecione uma foto"), PICK_IMAGE_RESULT);
     }
 
     @Override
@@ -218,10 +218,10 @@ public class PetRegisterActivity extends AppCompatActivity {
                 }
             }
             else if (resultCode == RESULT_CANCELED) {
-                Log.i("paymentExample", "The user canceled.");
+                Log.i("paymentExample", "O usuário cancelou.");
             }
             else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-                Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+                Log.i("paymentExample", "Um pagamento invalido ou configuração invalida foi submetida. Por favor leia o doc.");
             }
         }
     }
@@ -234,7 +234,7 @@ public class PetRegisterActivity extends AppCompatActivity {
         //   - PAYMENT_INTENT_ORDER to create a payment for authorization and capture
         //     later via calls from your server.
 
-        PayPalPayment payment = new PayPalPayment(new BigDecimal("9.99"), "BRL", "Taxa de cadastro para UM animal",
+        PayPalPayment payment = new PayPalPayment(new BigDecimal("9.99"), "BRL", "Taxa para cadastrar um animal",
                 PayPalPayment.PAYMENT_INTENT_SALE);
 
         Intent intent = new Intent(this, PaymentActivity.class);

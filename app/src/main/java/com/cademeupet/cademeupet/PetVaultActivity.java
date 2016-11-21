@@ -168,14 +168,14 @@ public class PetVaultActivity extends AppCompatActivity {
         }
 
         new AlertDialog.Builder(this)
-                .setTitle("Update Completed!")
-                .setMessage( petName + " data has been updated successfully!")
+                .setTitle("Atualização completa!")
+                .setMessage("Os dados do(a) " + petName + " foram atualizados com sucesso!")
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .setCancelable(false)
                 .setNegativeButton("OK", null)
                 .show();
 
-        System.out.println("Pet inserted!");
+        System.out.println("Pet inserido!");
     }
 
     public void registerNewPet(Uri file, final String petName, String petSex, String petSpecie) {
@@ -249,14 +249,14 @@ public class PetVaultActivity extends AppCompatActivity {
         });
 
         new AlertDialog.Builder(this)
-            .setTitle("Registration Completed!")
-            .setMessage( petName + " has been registered successfully! An email with extra information has been sent to you!")
-            .setIcon(android.R.drawable.ic_dialog_info)
-            .setCancelable(false)
-            .setNegativeButton("OK", null)
-            .show();
+                .setTitle("Registro Completado!")
+                .setMessage( petName + " foi registrado(a) com sucesso! Um email com informações extras foi enviado à você!")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setCancelable(false)
+                .setNegativeButton("OK", null)
+                .show();
 
-        System.out.println("Pet inserted!");
+        System.out.println("Pet inserido!");
     }
 
     public void uploadImagem(Uri file, String petID) {
