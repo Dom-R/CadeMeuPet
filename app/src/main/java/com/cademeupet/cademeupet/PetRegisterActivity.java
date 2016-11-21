@@ -84,6 +84,8 @@ public class PetRegisterActivity extends AppCompatActivity {
         if(petID != null) {
             hasPayed = true;
             TextView button = (TextView) findViewById(R.id.register);
+            final TextView titleText = (TextView) findViewById(R.id.textRegistration);
+            titleText.setText("Atualizar dados de seu Pet:");
             button.setText("Atualizar");
 
             final PetRegisterActivity currentClass = this;
@@ -96,6 +98,8 @@ public class PetRegisterActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     PetInfo pet = dataSnapshot.getValue(PetInfo.class);
                     System.out.println(pet.getName());
+
+                    titleText.setText("Atualizar dados de " + pet.getName() + ":");
 
                     // Setting pet name
                     EditText textPetName = (EditText) findViewById(R.id.inputPetName);
