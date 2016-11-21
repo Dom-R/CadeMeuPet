@@ -50,6 +50,7 @@ public class PetRegisterActivity extends AppCompatActivity {
     private Uri file;
     private StorageReference storageRef;
     private Spinner spinnerSpecie;
+    private Button paypalButton;
 
     private static PayPalConfiguration config = new PayPalConfiguration()
             // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
@@ -73,6 +74,7 @@ public class PetRegisterActivity extends AppCompatActivity {
         inputPetName = (EditText) findViewById(R.id.inputPetName);
         inputPetSex = (RadioGroup) findViewById(R.id.radioGroupSex);
         spinnerSpecie = (Spinner) findViewById(R.id.spinnerSpecie);
+        paypalButton = (Button) findViewById(R.id.paypalButton);
 
         // Create a storage reference from our app
         storageRef = FirebaseStorage.getInstance().getReference();
@@ -139,6 +141,8 @@ public class PetRegisterActivity extends AppCompatActivity {
                     System.out.println("The read failed: " + databaseError.getCode());
                 }
             });
+        } else {
+            paypalButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -210,7 +214,6 @@ public class PetRegisterActivity extends AppCompatActivity {
                 PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if (confirm != null) {
                     hasPayed = true;
-                    Button paypalButton = (Button) findViewById(R.id.paypalButton);
                     paypalButton.setVisibility(View.GONE);
                 }
             }

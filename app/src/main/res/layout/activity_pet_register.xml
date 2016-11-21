@@ -141,7 +141,8 @@
                 android:background="@drawable/loginbuttonshape"
                 android:onClick="onBuyPressed"
                 android:layout_above="@+id/register"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
