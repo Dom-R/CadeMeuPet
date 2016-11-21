@@ -6,10 +6,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -26,12 +29,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
+
+import org.json.JSONException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 public class PetRegisterActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_RESULT = 2845;
+    private static final int PAYPAL_REQUEST = 4958;
     private EditText inputPetName;
     private RadioGroup inputPetSex;
     private String petID;
@@ -39,10 +51,24 @@ public class PetRegisterActivity extends AppCompatActivity {
     private StorageReference storageRef;
     private Spinner spinnerSpecie;
 
+    private static PayPalConfiguration config = new PayPalConfiguration()
+            // Start with mock environment.  When ready, switch to sandbox (ENVIRONMENT_SANDBOX)
+            // or live (ENVIRONMENT_PRODUCTION)
+            .environment(PayPalConfiguration.ENVIRONMENT_NO_NETWORK)
+            .clientId("AVReue7hj6TCzhfSv07LoHyJF9jncDYcEjDIRrloQiscEVBVLU57PWtpvNb3oojJxpdLPwkw4jyNTqAV");
+
+    private boolean hasPayed = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_register);
+
+        Intent paypalIntent = new Intent(this, PayPalService.class);
+
+        paypalIntent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+
+        startService(paypalIntent);
 
         inputPetName = (EditText) findViewById(R.id.inputPetName);
         inputPetSex = (RadioGroup) findViewById(R.id.radioGroupSex);
@@ -116,13 +142,26 @@ public class PetRegisterActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
+    }
 
     public void registerUser(View view) {
-        if(inputPetName.getText().toString().trim().equals("")) {
+        if (inputPetName.getText().toString().trim().equals("")) {
             inputPetName.setError("Full name is required");
         } else if (inputPetSex.getCheckedRadioButtonId() == -1) {
             TextView temp = (TextView) findViewById(R.id.textPetSex);
             temp.setError("Please select a option");
+        } else if(hasPayed == false) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Pet Registration!")
+                    .setMessage("You have to pay to be able to register your pet!")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setCancelable(false)
+                    .setNegativeButton("OK", null)
+                    .show();
         } else {
             // Get selected RadioButton to get the sex
             int selectedId = inputPetSex.getCheckedRadioButtonId();
@@ -165,6 +204,44 @@ public class PetRegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        if(requestCode == PAYPAL_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                PaymentConfirmation confirm = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if (confirm != null) {
+                    hasPayed = true;
+                    Button paypalButton = (Button) findViewById(R.id.paypalButton);
+                    paypalButton.setVisibility(View.GONE);
+                }
+            }
+            else if (resultCode == RESULT_CANCELED) {
+                Log.i("paymentExample", "The user canceled.");
+            }
+            else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+                Log.i("paymentExample", "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
+            }
+        }
+    }
+
+    public void onBuyPressed(View pressed) {
+
+        // PAYMENT_INTENT_SALE will cause the payment to complete immediately.
+        // Change PAYMENT_INTENT_SALE to
+        //   - PAYMENT_INTENT_AUTHORIZE to only authorize payment and capture funds later.
+        //   - PAYMENT_INTENT_ORDER to create a payment for authorization and capture
+        //     later via calls from your server.
+
+        PayPalPayment payment = new PayPalPayment(new BigDecimal("9.99"), "BRL", "Taxa de cadastro para UM animal",
+                PayPalPayment.PAYMENT_INTENT_SALE);
+
+        Intent intent = new Intent(this, PaymentActivity.class);
+
+        // send the same configuration for restart resiliency
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+
+        startActivityForResult(intent, PAYPAL_REQUEST);
     }
 
 }

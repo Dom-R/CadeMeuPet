@@ -249,12 +249,12 @@ public class PetVaultActivity extends AppCompatActivity {
         });
 
         new AlertDialog.Builder(this)
-                .setTitle("Registration Completed!")
-                .setMessage( petName + " has been registered successfully! An email with extra information has been sent to you!")
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setCancelable(false)
-                .setNegativeButton("OK", null)
-                .show();
+            .setTitle("Registration Completed!")
+            .setMessage( petName + " has been registered successfully! An email with extra information has been sent to you!")
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setCancelable(false)
+            .setNegativeButton("OK", null)
+            .show();
 
         System.out.println("Pet inserted!");
     }

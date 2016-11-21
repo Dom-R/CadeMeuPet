@@ -131,6 +131,18 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
+            <Button
+                android:text="Pay with Paypal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/paypalButton"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/loginbuttonshape"
+                android:onClick="onBuyPressed"
+                android:layout_above="@+id/register"
+                android:layout_centerHorizontal="true" />
+
         </RelativeLayout>
 
     </ScrollView>
