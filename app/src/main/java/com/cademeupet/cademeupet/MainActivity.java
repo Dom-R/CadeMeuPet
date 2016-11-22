@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         );
         TextView tv = (TextView) findViewById(R.id.buttonLoginORProfile);
         tv.setText("Perfil");
+        loadingDialog.hide();
     }
 
     public void databaseTest(View view) {
@@ -267,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void startRegistration(String token, String name, String email) {
+        loadingDialog.show();
         Intent intent = new Intent(this, RegisterActivity.class);
         intent.putExtra("USER_TOKEN", token);
         intent.putExtra("USER_NAME", name);
@@ -311,10 +313,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void login(View view) {
+        loadingDialog.show();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, LOGIN_RESULT);
-
-        //loadingDialog.show();
     }
 
     public void openPetsVault() {
