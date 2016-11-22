@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.regex.Pattern;
 
@@ -58,6 +59,9 @@ public class RegisterActivity extends AppCompatActivity {
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
             mDatabase.child("users").child(userToken).setValue(user);
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl("https://cademeupet-4379e.firebaseio.com/users/" + userToken + "/NotificationID");
+            ref.setValue(FirebaseInstanceId.getInstance().getToken());
 
             finish();
         }
