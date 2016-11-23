@@ -24,6 +24,16 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <TextView
+        android:text="Faça seu cadastro:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="70px"
+        android:id="@+id/textRegistration"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <EditText
         android:id="@+id/inputFullname"
         android:layout_width="fill_parent"
@@ -32,8 +42,7 @@
         android:inputType="text"
         android:layout_below="@+id/textRegistration"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="14sp"/>
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:id="@+id/inputEmail"
@@ -43,8 +52,7 @@
         android:inputType="textEmailAddress"
         android:layout_below="@+id/inputFullname"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="14sp"/>
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:id="@+id/inputNumber"
@@ -53,17 +61,6 @@
         android:hint="Telefone"
         android:inputType="phone"
         android:layout_below="@+id/inputEmail"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textSize="14sp"/>
-
-    <TextView
-        android:text="Faça seu cadastro:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:id="@+id/textRegistration"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

@@ -20,57 +20,30 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <TextView
-                android:text="Insira uma foto do pet"
+            <Button
+                android:text="Registrar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imagePet"
-                android:layout_below="@+id/imageButton"
-                android:layout_centerHorizontal="true"
-                android:textSize="12sp" />
+                android:layout_alignParentBottom="true"
+                android:id="@+id/register"
+                android:onClick="registerUser"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/mainbuttonshape"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
             <TextView
-                android:text="Nome do pet"
+                android:text="Registre Seu Pet:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textPetName"
-                android:layout_below="@+id/imagePet"
+                android:textSize="70px"
+                android:id="@+id/textRegistration"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textSize="14sp" />
+                android:layout_alignParentStart="true" />
 
-            <TextView
-                android:text="Espécie"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textPetSpecie"
-                android:layout_below="@+id/radioGroupSex"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textSize="14sp" />
-
-            <Spinner
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinnerSpecie"
-                android:entries="@array/array_species"
-                android:layout_below="@+id/textPetSpecie"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textSize="10sp"
-                android:scaleX="0.80"
-                android:scaleY="0.80"/>
-
-            <ImageButton
-                app:srcCompat="@android:drawable/ic_menu_gallery"
-                android:id="@+id/imageButton"
-                android:elevation="0dp"
-                android:onClick="uploadPetImage"
-                android:layout_width="72sp"
-                android:layout_height="72sp"
-                android:layout_below="@+id/textRegistration"
-                android:layout_centerHorizontal="true" />
 
             <RadioGroup
                 android:id="@+id/radioGroupSex"
@@ -86,60 +59,75 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sexo"
-                    android:textSize="14sp"
+                    android:textSize="18sp"
                     android:textAllCaps="false"
                     android:fontFamily="sans-serif" />
 
                 <RadioButton android:id="@+id/maleSex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleX="0.70"
-                    android:scaleY="0.70"
-                    android:text="Macho"
-                    android:textSize="14sp" />
+                    android:text="Macho"/>
                 <RadioButton android:id="@+id/femaleSex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleX="0.70"
-                    android:scaleY="0.70"
                     android:text="Fêmea"/>
 
             </RadioGroup>
+
+            <ImageButton
+                app:srcCompat="@android:drawable/ic_menu_gallery"
+                android:id="@+id/imageButton"
+                android:elevation="0dp"
+                android:layout_marginTop="19dp"
+                android:layout_below="@+id/textRegistration"
+                android:layout_centerHorizontal="true"
+                android:onClick="uploadPetImage"
+                android:layout_width="512px"
+                android:layout_height="512px" />
+
+            <TextView
+                android:text="Insira uma foto do pet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imagePet"
+                android:layout_below="@+id/imageButton"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:text="Nome do pet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textPetName"
+                android:layout_below="@+id/imagePet"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/inputPetName"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:textSize="12sp"
+                android:layout_below="@+id/textPetName"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/textPetName"/>
-
-            <Button
-                android:text="Registrar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/register"
-                android:onClick="registerUser"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:background="@drawable/mainbuttonshape"
-                android:scaleX="0.60"
-                android:scaleY="0.60"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentStart="true" />
 
             <TextView
-                android:text="Registre Seu Pet:"
+                android:text="Espécie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:id="@+id/textRegistration"
-                android:layout_alignParentTop="true"
+                android:id="@+id/textPetSpecie"
+                android:layout_below="@+id/radioGroupSex"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerSpecie"
+                android:entries="@array/array_species"
+                android:layout_below="@+id/textPetSpecie"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
@@ -147,19 +135,14 @@
                 android:text="Pagar com Paypal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:id="@+id/paypalButton"
                 android:textColor="#FFFFFF"
                 android:background="@drawable/loginbuttonshape"
                 android:onClick="onBuyPressed"
-                android:visibility="gone"
-                android:textSize="18sp"
-                android:scaleX="0.60"
-                android:scaleY="0.60"
                 android:layout_above="@+id/register"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textPetSex"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_below="@+id/textPetName"
                 android:layout_alignLeft="@+id/textPetName"
                 android:layout_alignStart="@+id/textPetName" />
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textPetName"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_alignBaseline="@+id/labelPetName"
                 android:layout_alignBottom="@+id/labelPetName"
                 android:layout_toRightOf="@+id/labelPetSpecie"
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textPetSpecie"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_below="@+id/textPetSex"
                 android:layout_alignLeft="@+id/textPetSex"
                 android:layout_alignStart="@+id/textPetSex" />
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textOwnerName"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_below="@+id/textDadosDono"
                 android:layout_toRightOf="@+id/labelOwnerPhone"
                 android:layout_toEndOf="@+id/labelOwnerPhone"
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textOwnerEmail"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_below="@+id/textOwnerName"
                 android:layout_alignLeft="@+id/textOwnerName"
                 android:layout_alignStart="@+id/textOwnerName" />
@@ -78,17 +78,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textOwnerPhone"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_below="@+id/textOwnerEmail"
                 android:layout_alignLeft="@+id/textOwnerEmail"
                 android:layout_alignStart="@+id/textOwnerEmail" />
+
+            <TextView
+                android:text="Informações do Pet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="30sp"
+                android:textStyle="normal|bold"
+                android:textAllCaps="false" />
+
+            <TextView
+                android:text="Informações do Dono"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textDadosDono"
+                android:textSize="30sp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:text="Email:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/labelOwnerEmail"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_below="@+id/labelOwnerName"
                 android:layout_alignLeft="@+id/labelOwnerPhone"
                 android:layout_alignStart="@+id/labelOwnerPhone"
@@ -99,7 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/labelOwnerName"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_below="@+id/textDadosDono"
                 android:layout_alignLeft="@+id/labelOwnerEmail"
                 android:layout_alignStart="@+id/labelOwnerEmail"
@@ -110,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/labelOwnerPhone"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_below="@+id/labelOwnerEmail"
@@ -123,7 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/labelPetSex"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="normal|bold"
                 android:layout_below="@+id/labelPetName"
                 android:layout_alignLeft="@+id/labelPetName"
@@ -143,7 +166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/labelPetSpecie"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="normal|bold"
                 android:layout_below="@+id/labelPetSex"
                 android:layout_alignLeft="@+id/labelPetSex"
@@ -154,35 +177,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/labelPetName"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="normal|bold"
                 android:layout_below="@+id/imagePetImage"
                 android:layout_alignLeft="@+id/labelOwnerName"
                 android:layout_alignStart="@+id/labelOwnerName" />
-
-            <TextView
-                android:text="Informações do Pet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView3"
-                android:textSize="20sp"
-                android:textStyle="normal|bold"
-                android:textAllCaps="false"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:text="Informações do Dono"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textDadosDono"
-                android:textSize="24sp"
-                android:textStyle="normal|bold"
-                android:layout_below="@+id/textPetSpecie"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="21dp" />
 
         </RelativeLayout>
 
