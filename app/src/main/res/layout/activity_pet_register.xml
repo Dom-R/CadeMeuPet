@@ -67,8 +67,8 @@
                 android:id="@+id/imageButton"
                 android:elevation="0dp"
                 android:onClick="uploadPetImage"
-                android:layout_width="72sp"
-                android:layout_height="72sp"
+                android:layout_width="80sp"
+                android:layout_height="80sp"
                 android:layout_below="@+id/textRegistration"
                 android:layout_centerHorizontal="true" />
 
@@ -100,8 +100,8 @@
                 <RadioButton android:id="@+id/femaleSex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleX="0.70"
-                    android:scaleY="0.70"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
                     android:text="Fêmea"/>
 
             </RadioGroup>
@@ -115,23 +115,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/textPetName"/>
-
-            <Button
-                android:text="Registrar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/register"
-                android:onClick="registerUser"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:background="@drawable/mainbuttonshape"
-                android:scaleX="0.60"
-                android:scaleY="0.60"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
 
             <TextView
                 android:text="Registre Seu Pet:"
@@ -152,10 +135,24 @@
                 android:background="@drawable/loginbuttonshape"
                 android:onClick="onBuyPressed"
                 android:visibility="gone"
-                android:textSize="18sp"
-                android:scaleX="0.60"
-                android:scaleY="0.60"
+                android:textSize="14sp"
+                android:layout_marginBottom="12sp"
                 android:layout_above="@+id/register"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <Button
+                android:text="Registrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/register"
+                android:onClick="registerUser"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:background="@drawable/mainbuttonshape"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentRight="true"
