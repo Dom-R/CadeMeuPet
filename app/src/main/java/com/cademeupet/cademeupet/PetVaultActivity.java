@@ -40,7 +40,7 @@ import java.security.SecureRandom;
 
 import cz.msebera.android.httpclient.Header;
 
-public class PetVaultActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class PetVaultActivity extends AppCompatActivity {
 
     private static final String TAG = "PetVault Activity";
     private String userToken;
