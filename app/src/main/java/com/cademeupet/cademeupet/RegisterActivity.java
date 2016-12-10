@@ -23,6 +23,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String userToken;
     private String userFullName;
     private String userEmail;
+    private String userTelephone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
         userToken = intent.getStringExtra("USER_TOKEN");
         userFullName = intent.getStringExtra("USER_NAME");
         userEmail = intent.getStringExtra("USER_EMAIL");
+        userTelephone = intent.getStringExtra("USER_PHONE_NUMBER");
 
         inputFullname = (EditText) findViewById(R.id.inputFullname);
         inputEmail = (EditText) findViewById(R.id.inputEmail);
@@ -42,9 +44,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         inputFullname.setText(userFullName);
         inputEmail.setText(userEmail);
-
+        if(userTelephone != null) { inputNumber.setText(userTelephone); }
     }
-
 
     public void registerUser(View view) {
         if(inputFullname.getText().toString().trim().equals("")) {

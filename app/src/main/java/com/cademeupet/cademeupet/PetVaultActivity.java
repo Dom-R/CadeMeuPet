@@ -2,24 +2,24 @@ package com.cademeupet.cademeupet;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -34,15 +34,13 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
 import cz.msebera.android.httpclient.Header;
 
-public class PetVaultActivity extends AppCompatActivity {
+public class PetVaultActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "PetVault Activity";
     private String userToken;
@@ -50,6 +48,8 @@ public class PetVaultActivity extends AppCompatActivity {
     private int PET_DATACHANGE_RESULT = 9482;
     private StorageReference  storageRef;
     private UploadTask uploadTask;
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +58,43 @@ public class PetVaultActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         userToken = intent.getStringExtra("USER_TOKEN");
+
+        final PetVaultActivity thisClass = this;
+
+        /********************************/
+        /************ NAVBAR ************/
+        /********************************/
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        addDrawerItems();
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DatabaseReference userRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://cademeupet-4379e.firebaseio.com/users/" + userToken);
+                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        System.out.println("Getting user info");
+
+                        String name = (String) dataSnapshot.child("name").getValue();
+                        String email = (String) dataSnapshot.child("email").getValue();
+                        String telephone = (String) dataSnapshot.child("phoneNumber").getValue();
+
+                        Intent intent = new Intent(thisClass, RegisterActivity.class);
+                        intent.putExtra("USER_TOKEN", userToken);
+                        intent.putExtra("USER_NAME", name);
+                        intent.putExtra("USER_EMAIL", email);
+                        intent.putExtra("USER_PHONE_NUMBER", telephone);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+            }
+        });
+        /********************************/
+        /************ NAVBAR ************/
+        /********************************/
 
         FloatingActionButton myFab = (FloatingActionButton) findViewById(R.id.add_pet);
         myFab.setOnClickListener(new View.OnClickListener() {
@@ -69,8 +106,6 @@ public class PetVaultActivity extends AppCompatActivity {
         // Get registered pets
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("pets");
-
-        final PetVaultActivity thisClass = this;
 
         final View.OnClickListener buttonClick = new View.OnClickListener() {
             public void onClick(View v) {
@@ -123,6 +158,12 @@ public class PetVaultActivity extends AppCompatActivity {
 
         // Create a storage reference from our app
         storageRef = FirebaseStorage.getInstance().getReference();
+    }
+
+    private void addDrawerItems() {
+        String[] osArray = { "Alterar Dados"};
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mDrawerList.setAdapter(mAdapter);
     }
 
     public void addNewPet() {
