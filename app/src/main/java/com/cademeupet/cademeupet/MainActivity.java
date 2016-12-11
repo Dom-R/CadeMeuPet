@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.NonNull; //COMENTAR PARA FAZER TESTE
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +58,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         loadingDialog.setInverseBackgroundForced(false);
         loadingDialog.show();
 
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadingDialog.hide();
+            }
+        }, 5000);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
@@ -72,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        int hideDialog = 0;
         // Loga usuario com Google automaticamente
         OptionalPendingResult<GoogleSignInResult> pendingResult =
                 Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
@@ -90,11 +98,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         } else {
             Log.d(TAG, "Falha ao autenticar conta Google!");
-            hideDialog += 1;
-
-            if(hideDialog == 2) {
-                loadingDialog.hide();
-            }
+            loadingDialog.hide();
         }
 
         // Verificacao se o usuario esta autenticado pelo facebook
@@ -103,11 +107,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             createUserIfNotExist(Profile.getCurrentProfile().getId(), Profile.getCurrentProfile().getName(), "");
         } else {
             Log.d(TAG, "Usuário não logado com Facebook!");
-            hideDialog += 1;
-
-            if(hideDialog == 2) {
-                loadingDialog.hide();
-            }
+            loadingDialog.hide();
         }
     }
 
@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         // Managed to Log in
         if(requestCode == LOGIN_RESULT) {
+            loadingDialog.hide();
             if (resultCode == RESULT_OK) {
                 // Create User
                 System.out.println(data.getStringExtra("USER_ID"));
@@ -200,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         );
         TextView tv = (TextView) findViewById(R.id.buttonLoginORProfile);
         tv.setText("Perfil");
-        loadingDialog.hide();
     }
 
     public void databaseTest(View view) {
@@ -235,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                loadingDialog.hide();
                 if (snapshot.exists()) {
                     // TODO: handle the case where the data already exists
                     System.out.println("User Exist in db");
@@ -268,7 +267,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void startRegistration(String token, String name, String email) {
-        loadingDialog.show();
         Intent intent = new Intent(this, RegisterActivity.class);
         intent.putExtra("USER_TOKEN", token);
         intent.putExtra("USER_NAME", name);

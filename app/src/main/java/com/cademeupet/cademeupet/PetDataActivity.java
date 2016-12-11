@@ -183,7 +183,7 @@ public class PetDataActivity extends AppCompatActivity {
                 });
 
                 // Envio de notificação para o celular
-                String notificationUrl ="http://lasid.sor.ufscar.br/twittersearch/country/sendnotification.php?id=" + prefs.getString("ownerNotificationID", "MISSING") + "&title=CadeMeuPet!&body=Dados%20de%20" + prefs.getString("petName", "Unknown Pet Name").replaceAll(" ", "%20") + "%20acabaram%20de%20ser%20acessados!&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude();
+                String notificationUrl ="http://lasid.sor.ufscar.br/twittersearch/country/sendnotification.php?id=" + prefs.getString("ownerNotificationID", "MISSING") + "&name=" + prefs.getString("petName", "Unknown Pet Name").replaceAll(" ", "%20") + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude();
 
                 System.out.println("[Phone Notification] URL: " + notificationUrl);
                 client.get(notificationUrl, new AsyncHttpResponseHandler() {

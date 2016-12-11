@@ -19,6 +19,7 @@ public class PetLocationActivity extends FragmentActivity implements OnMapReadyC
     private GoogleMap mMap;
     private String latitude;
     private String longitude;
+    private String petName;
     private String TAG = "PetLocationActivity";
 
     @Override
@@ -29,6 +30,7 @@ public class PetLocationActivity extends FragmentActivity implements OnMapReadyC
         Intent intent = getIntent();
         latitude = intent.getStringExtra("LAT");
         longitude = intent.getStringExtra("LONG");
+        petName = intent.getStringExtra("NAME");
         System.out.println("Latitude: " + latitude + " - Longitude: " + longitude);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -53,7 +55,8 @@ public class PetLocationActivity extends FragmentActivity implements OnMapReadyC
 
         // Add a marker in on the pet location
         LatLng petLocation = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-        mMap.addMarker(new MarkerOptions().position(petLocation).title("Os dados do Pet foram acessados nessa localização"));
+        mMap.addMarker(new MarkerOptions().position(petLocation).title("Os dados de " + petName + " foram acessados nessa localização.")).showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(petLocation));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)), 15.0f));
     }
 }
