@@ -56,7 +56,6 @@ public class PetVaultActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private String mActivityTitle = "Seus Pets";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +73,6 @@ public class PetVaultActivity extends AppCompatActivity {
         mDrawerList = (ListView)findViewById(R.id.navList);
 
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mActivityTitle = getTitle().toString();
 
         setupDrawer();
         addDrawerItems();
