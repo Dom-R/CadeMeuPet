@@ -56,7 +56,7 @@ public class PetVaultActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private String mActivityTitle;
+    private String mActivityTitle = "Seus Pets";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,9 +106,9 @@ public class PetVaultActivity extends AppCompatActivity {
             }
         });
 
-
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("Seus Pets");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         /********************************/
         /************ NAVBAR ************/
         /********************************/
@@ -195,25 +195,21 @@ public class PetVaultActivity extends AppCompatActivity {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Navigation!");
+                getSupportActionBar().setTitle("Editar Perfil");
                 invalidateOptionsMenu();
             }
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mActivityTitle);
+                getSupportActionBar().setTitle("Seus Pets");
                 invalidateOptionsMenu();
             }
+
         };
 
         mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-//        MenuItem item;
-//        if (mDrawerToggle.onOptionsItemSelected(item)) {
-//            return true;
-//        }
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     private void addDrawerItems() {
@@ -225,6 +221,12 @@ public class PetVaultActivity extends AppCompatActivity {
     public void addNewPet() {
         Intent intent = new Intent(this, PetRegisterActivity.class);
         startActivityForResult(intent, PET_REGISTRATION_RESULT);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
     }
 
     @Override
