@@ -8,4 +8,6 @@
         <item>Cachorro</item>
     </string-array>
     <string name="title_activity_pet_location">Map</string>
+    <string name="drawer_open">Seus Pets</string>
+    <string name="drawer_close">Suas Informações</string>
 </resources>
